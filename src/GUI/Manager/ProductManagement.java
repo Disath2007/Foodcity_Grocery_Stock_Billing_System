@@ -4,20 +4,40 @@
  */
 package GUI.Manager;
 
+import database.DatabaseConnection;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author Disath Damsutha
  */
 public class ProductManagement extends javax.swing.JFrame {
-    
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(ProductManagement.class.getName());
-    
-        public ProductManagement() {
+
+    private static final java.util.logging.Logger logger = java.util.logging.Logger
+            .getLogger(ProductManagement.class.getName());
+
+    // Variable to store selected product ID for update/delete operations
+    private int selectedProductId = -1;
+
+    // Map to store category name -> category ID mapping
+    private Map<String, Integer> categoryMap = new HashMap<>();
+
+    public ProductManagement() {
         initComponents();
         this.setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+        loadCategories(); // Load categories into dropdown
+        loadProductData(); // Load products into table
     }
 
     @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -26,8 +46,7 @@ public class ProductManagement extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         lbl_5 = new javax.swing.JLabel();
-        txt_item = new javax.swing.JTextField();
-        btn_search1 = new javax.swing.JButton();
+        txt_itemsearch = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
         lbl_Product = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
@@ -51,7 +70,7 @@ public class ProductManagement extends javax.swing.JFrame {
 
         jPanel4.setBackground(new java.awt.Color(243, 247, 244));
 
-        jTable1.setFont(new java.awt.Font("Unispace", 0, 12)); // NOI18N
+        jTable1.setFont(new java.awt.Font("Poppins", 0, 12)); // NOI18N
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -79,12 +98,10 @@ public class ProductManagement extends javax.swing.JFrame {
         lbl_5.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         lbl_5.setText("Search:");
 
-        btn_search1.setBackground(new java.awt.Color(147, 202, 55));
-        btn_search1.setFont(new java.awt.Font("Unispace", 0, 12)); // NOI18N
-        btn_search1.setText("Search");
-        btn_search1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_search1ActionPerformed(evt);
+        txt_itemsearch.setFont(new java.awt.Font("Unispace", 0, 12)); // NOI18N
+        txt_itemsearch.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txt_itemsearchKeyReleased(evt);
             }
         });
 
@@ -96,10 +113,7 @@ public class ProductManagement extends javax.swing.JFrame {
                 .addGap(36, 36, 36)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lbl_5)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(txt_item, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(12, 12, 12)
-                        .addComponent(btn_search1, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txt_itemsearch, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 1412, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(32, Short.MAX_VALUE))
         );
@@ -109,9 +123,7 @@ public class ProductManagement extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(lbl_5)
                 .addGap(6, 6, 6)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txt_item, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btn_search1, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(txt_itemsearch, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(35, 35, 35)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 549, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(343, Short.MAX_VALUE))
@@ -193,6 +205,10 @@ public class ProductManagement extends javax.swing.JFrame {
             }
         });
 
+        txt_itemname.setFont(new java.awt.Font("Unispace", 0, 12)); // NOI18N
+
+        txt_itemprice.setFont(new java.awt.Font("Unispace", 0, 12)); // NOI18N
+
         btn_back.setBackground(new java.awt.Color(153, 153, 153));
         btn_back.setFont(new java.awt.Font("Unispace", 0, 18)); // NOI18N
         btn_back.setText("Back");
@@ -201,6 +217,8 @@ public class ProductManagement extends javax.swing.JFrame {
                 btn_backActionPerformed(evt);
             }
         });
+
+        cmb_Category.setFont(new java.awt.Font("Unispace", 0, 12)); // NOI18N
 
         btn_Category.setBackground(new java.awt.Color(147, 186, 40));
         btn_Category.setFont(new java.awt.Font("Unispace", 0, 18)); // NOI18N
@@ -303,56 +321,378 @@ public class ProductManagement extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
+    private void txt_itemsearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_itemsearchKeyReleased
+       searchProduct();
+    }//GEN-LAST:event_txt_itemsearchKeyReleased
 
-    }//GEN-LAST:event_jTable1MouseClicked
+    private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_jTable1MouseClicked
+        int selectedRow = jTable1.getSelectedRow();
+        if (selectedRow >= 0) {
+            selectedProductId = Integer.parseInt(jTable1.getValueAt(selectedRow, 0).toString());
+            String productName = jTable1.getValueAt(selectedRow, 1).toString();
+            String categoryName = jTable1.getValueAt(selectedRow, 2).toString();
+            String price = jTable1.getValueAt(selectedRow, 3).toString();
 
-    private void btn_clearActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_clearActionPerformed
+            txt_itemname.setText(productName);
+            cmb_Category.setSelectedItem(categoryName);
+            txt_itemprice.setText(price);
+        }
+    }// GEN-LAST:event_jTable1MouseClicked
 
-    txt_item.setText("");
-    txt_itemname.setText("");
-    cmb_Category.setSelectedIndex(-1);
-    txt_itemprice.setText("");
-    
+    private void btn_clearActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btn_clearActionPerformed
+        clearFields();
+    }// GEN-LAST:event_btn_clearActionPerformed
 
-    }//GEN-LAST:event_btn_clearActionPerformed
+    private void btn_saveActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btn_saveActionPerformed
+        addProduct();
+    }// GEN-LAST:event_btn_saveActionPerformed
 
-    private void btn_saveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_saveActionPerformed
+    private void btn_updateActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btn_updateActionPerformed
+        updateProduct();
+    }// GEN-LAST:event_btn_updateActionPerformed
 
+    private void btn_deleteActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btn_deleteActionPerformed
+        deleteProduct();
+    }// GEN-LAST:event_btn_deleteActionPerformed
 
-    }//GEN-LAST:event_btn_saveActionPerformed
-
-    private void btn_updateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_updateActionPerformed
-
-    }//GEN-LAST:event_btn_updateActionPerformed
-
-    private void btn_deleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_deleteActionPerformed
-
-    }//GEN-LAST:event_btn_deleteActionPerformed
-
-    private void btn_backActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_backActionPerformed
-       new ManagerDashboard().setVisible(true);
+    private void btn_backActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btn_backActionPerformed
+        new ManagerDashboard().setVisible(true);
         this.dispose();
-    }//GEN-LAST:event_btn_backActionPerformed
+    }// GEN-LAST:event_btn_backActionPerformed
 
-    private void btn_search1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_search1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btn_search1ActionPerformed
+    private void btn_searchActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btn_searchActionPerformed
+        searchProduct();
+    }// GEN-LAST:event_btn_searchActionPerformed
 
-    private void btn_CategoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_CategoryActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btn_CategoryActionPerformed
+    private void btn_CategoryActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btn_CategoryActionPerformed
+        new CategoryManagement().setVisible(true);
+        this.dispose();
+    }// GEN-LAST:event_btn_CategoryActionPerformed
 
-
-    
     /**
      * @param args the command line arguments
      */
+
+    // ==================== PRODUCT CRUD METHODS ====================
+
+    /**
+     * Load all categories into the dropdown (combo box)
+     */
+    private void loadCategories() {
+        cmb_Category.removeAllItems();
+        categoryMap.clear();
+
+        String sql = "SELECT category_id, category_name FROM category ORDER BY category_name";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql);
+                ResultSet rs = pstmt.executeQuery()) {
+
+            while (rs.next()) {
+                int categoryId = rs.getInt("category_id");
+                String categoryName = rs.getString("category_name");
+
+                cmb_Category.addItem(categoryName);
+                categoryMap.put(categoryName, categoryId);
+            }
+
+            cmb_Category.setSelectedIndex(-1); // No selection by default
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Error loading categories: " + e.getMessage(),
+                    "Database Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * Load all products from database into the table
+     */
+    private void loadProductData() {
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        model.setRowCount(0); // Clear existing rows
+
+        String sql = "SELECT p.product_id, p.product_name, c.category_name, p.price " +
+                "FROM product p " +
+                "JOIN category c ON p.category_id = c.category_id " +
+                "ORDER BY p.product_id";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql);
+                ResultSet rs = pstmt.executeQuery()) {
+
+            while (rs.next()) {
+                int productId = rs.getInt("product_id");
+                String productName = rs.getString("product_name");
+                String categoryName = rs.getString("category_name");
+                double price = rs.getDouble("price");
+
+                model.addRow(new Object[] { productId, productName, categoryName, String.format("%.2f", price) });
+            }
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Error loading products: " + e.getMessage(),
+                    "Database Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * Add a new product to the database
+     */
+    private void addProduct() {
+        String productName = txt_itemname.getText().trim();
+        String priceText = txt_itemprice.getText().trim();
+
+        // Validation
+        if (productName.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please enter a product name!",
+                    "Validation Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if (cmb_Category.getSelectedIndex() == -1) {
+            JOptionPane.showMessageDialog(this, "Please select a category!",
+                    "Validation Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if (priceText.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please enter a price!",
+                    "Validation Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        double price;
+        try {
+            price = Double.parseDouble(priceText);
+            if (price < 0) {
+                JOptionPane.showMessageDialog(this, "Price cannot be negative!",
+                        "Validation Error", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Please enter a valid price (numbers only)!",
+                    "Validation Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        String selectedCategory = cmb_Category.getSelectedItem().toString();
+        int categoryId = categoryMap.get(selectedCategory);
+
+        String sql = "INSERT INTO product (product_name, category_id, price) VALUES (?, ?, ?)";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, productName);
+            pstmt.setInt(2, categoryId);
+            pstmt.setDouble(3, price);
+            int rowsAffected = pstmt.executeUpdate();
+
+            if (rowsAffected > 0) {
+                JOptionPane.showMessageDialog(this, "Product added successfully!",
+                        "Success", JOptionPane.INFORMATION_MESSAGE);
+                clearFields();
+                loadProductData();
+            }
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Error adding product: " + e.getMessage(),
+                    "Database Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * Update the selected product
+     */
+    private void updateProduct() {
+        if (selectedProductId == -1) {
+            JOptionPane.showMessageDialog(this, "Please select a product from the table to update!",
+                    "Selection Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        String productName = txt_itemname.getText().trim();
+        String priceText = txt_itemprice.getText().trim();
+
+        // Validation
+        if (productName.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please enter a product name!",
+                    "Validation Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if (cmb_Category.getSelectedIndex() == -1) {
+            JOptionPane.showMessageDialog(this, "Please select a category!",
+                    "Validation Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if (priceText.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please enter a price!",
+                    "Validation Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        double price;
+        try {
+            price = Double.parseDouble(priceText);
+            if (price < 0) {
+                JOptionPane.showMessageDialog(this, "Price cannot be negative!",
+                        "Validation Error", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Please enter a valid price (numbers only)!",
+                    "Validation Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        int confirm = JOptionPane.showConfirmDialog(this,
+                "Are you sure you want to update this product?",
+                "Confirm Update", JOptionPane.YES_NO_OPTION);
+
+        if (confirm != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        String selectedCategory = cmb_Category.getSelectedItem().toString();
+        int categoryId = categoryMap.get(selectedCategory);
+
+        String sql = "UPDATE product SET product_name = ?, category_id = ?, price = ? WHERE product_id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, productName);
+            pstmt.setInt(2, categoryId);
+            pstmt.setDouble(3, price);
+            pstmt.setInt(4, selectedProductId);
+            int rowsAffected = pstmt.executeUpdate();
+
+            if (rowsAffected > 0) {
+                JOptionPane.showMessageDialog(this, "Product updated successfully!",
+                        "Success", JOptionPane.INFORMATION_MESSAGE);
+                clearFields();
+                loadProductData();
+            }
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Error updating product: " + e.getMessage(),
+                    "Database Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * Delete the selected product
+     */
+    private void deleteProduct() {
+        if (selectedProductId == -1) {
+            JOptionPane.showMessageDialog(this, "Please select a product from the table to delete!",
+                    "Selection Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        int confirm = JOptionPane.showConfirmDialog(this,
+                "Are you sure you want to delete this product?",
+                "Confirm Delete", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+
+        if (confirm != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        String sql = "DELETE FROM product WHERE product_id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, selectedProductId);
+            int rowsAffected = pstmt.executeUpdate();
+
+            if (rowsAffected > 0) {
+                JOptionPane.showMessageDialog(this, "Product deleted successfully!",
+                        "Success", JOptionPane.INFORMATION_MESSAGE);
+                clearFields();
+                loadProductData();
+            }
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Error deleting product: " + e.getMessage(),
+                    "Database Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * Search products by name or category
+     */
+    private void searchProduct() {
+        String searchTerm = txt_itemsearch.getText().trim();
+
+        if (searchTerm.isEmpty()) {
+            loadProductData();
+            return;
+        }
+
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        model.setRowCount(0);
+
+        String sql = "SELECT p.product_id, p.product_name, c.category_name, p.price " +
+                "FROM product p " +
+                "JOIN category c ON p.category_id = c.category_id " +
+                "WHERE p.product_name LIKE ? OR c.category_name LIKE ? " +
+                "ORDER BY p.product_name";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, "%" + searchTerm + "%");
+            pstmt.setString(2, "%" + searchTerm + "%");
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                boolean found = false;
+                while (rs.next()) {
+                    found = true;
+                    int productId = rs.getInt("product_id");
+                    String productName = rs.getString("product_name");
+                    String categoryName = rs.getString("category_name");
+                    double price = rs.getDouble("price");
+
+                    model.addRow(new Object[] { productId, productName, categoryName, String.format("%.2f", price) });
+                }
+
+                if (!found) {
+                    JOptionPane.showMessageDialog(this, "No products found matching '" + searchTerm + "'",
+                            "Search Result", JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, "Error searching products: " + e.getMessage(),
+                    "Database Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    /**
+     * Clear all input fields and reset selection
+     */
+    private void clearFields() {
+        txt_itemsearch.setText("");
+        txt_itemname.setText("");
+        cmb_Category.setSelectedIndex(-1);
+        txt_itemprice.setText("");
+        selectedProductId = -1;
+        jTable1.clearSelection();
+        loadProductData(); // Refresh the table
+    }
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+        // <editor-fold defaultstate="collapsed" desc=" Look and feel setting code
+        // (optional) ">
+        /*
+         * If Nimbus (introduced in Java SE 6) is not available, stay with the default
+         * look and feel.
+         * For details see
+         * http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -364,7 +704,7 @@ public class ProductManagement extends javax.swing.JFrame {
         } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
             logger.log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
+        // </editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> new ProductManagement().setVisible(true));
@@ -376,7 +716,6 @@ public class ProductManagement extends javax.swing.JFrame {
     private javax.swing.JButton btn_clear;
     private javax.swing.JButton btn_delete;
     private javax.swing.JButton btn_save;
-    private javax.swing.JButton btn_search1;
     private javax.swing.JButton btn_update;
     private javax.swing.JComboBox<String> cmb_Category;
     private javax.swing.JPanel jPanel1;
@@ -390,8 +729,8 @@ public class ProductManagement extends javax.swing.JFrame {
     private javax.swing.JLabel lbl_4;
     private javax.swing.JLabel lbl_5;
     private javax.swing.JLabel lbl_Product;
-    private javax.swing.JTextField txt_item;
     private javax.swing.JTextField txt_itemname;
     private javax.swing.JTextField txt_itemprice;
+    private javax.swing.JTextField txt_itemsearch;
     // End of variables declaration//GEN-END:variables
 }
