@@ -435,7 +435,8 @@ public class ManagerDashboard extends javax.swing.JFrame {
     }//GEN-LAST:event_btnReportActionPerformed
 
     private void btnSuppliermanagementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuppliermanagementActionPerformed
-        // TODO add your handling code here:
+            new SupplierManagement().setVisible(true);
+    this.dispose();
     }//GEN-LAST:event_btnSuppliermanagementActionPerformed
 
     private void btnReport1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReport1ActionPerformed

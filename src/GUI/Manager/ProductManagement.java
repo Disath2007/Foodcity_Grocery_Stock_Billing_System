@@ -38,6 +38,7 @@ public class ProductManagement extends javax.swing.JFrame {
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -62,6 +63,7 @@ public class ProductManagement extends javax.swing.JFrame {
         btn_back = new javax.swing.JButton();
         cmb_Category = new javax.swing.JComboBox<>();
         btn_Category = new javax.swing.JButton();
+        btn_supplier = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setSize(new java.awt.Dimension(1538, 974));
@@ -125,8 +127,8 @@ public class ProductManagement extends javax.swing.JFrame {
                 .addGap(6, 6, 6)
                 .addComponent(txt_itemsearch, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(35, 35, 35)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 549, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(343, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 765, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(127, Short.MAX_VALUE))
         );
 
         jPanel2.setBackground(new java.awt.Color(73, 128, 37));
@@ -229,6 +231,15 @@ public class ProductManagement extends javax.swing.JFrame {
             }
         });
 
+        btn_supplier.setBackground(new java.awt.Color(147, 186, 40));
+        btn_supplier.setFont(new java.awt.Font("Unispace", 0, 18)); // NOI18N
+        btn_supplier.setText("Supplier Management");
+        btn_supplier.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_supplierActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -236,6 +247,7 @@ public class ProductManagement extends javax.swing.JFrame {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(40, 40, 40)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btn_supplier, javax.swing.GroupLayout.PREFERRED_SIZE, 366, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(cmb_Category, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel3Layout.createSequentialGroup()
@@ -280,6 +292,8 @@ public class ProductManagement extends javax.swing.JFrame {
                     .addComponent(btn_clear, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(47, 47, 47)
                 .addComponent(btn_Category, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btn_supplier, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btn_back, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(37, 37, 37))
@@ -321,9 +335,15 @@ public class ProductManagement extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txt_itemsearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txt_itemsearchKeyReleased
-       searchProduct();
-    }//GEN-LAST:event_txt_itemsearchKeyReleased
+    private void txt_itemsearchKeyReleased(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_txt_itemsearchKeyReleased
+        searchProduct();
+    }// GEN-LAST:event_txt_itemsearchKeyReleased
+
+    private void btn_supplierActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btn_supplierActionPerformed
+        new SupplierManagement().setVisible(true);
+        this.dispose();
+
+    }// GEN-LAST:event_btn_supplierActionPerformed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_jTable1MouseClicked
         int selectedRow = jTable1.getSelectedRow();
@@ -359,10 +379,6 @@ public class ProductManagement extends javax.swing.JFrame {
         new ManagerDashboard().setVisible(true);
         this.dispose();
     }// GEN-LAST:event_btn_backActionPerformed
-
-    private void btn_searchActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btn_searchActionPerformed
-        searchProduct();
-    }// GEN-LAST:event_btn_searchActionPerformed
 
     private void btn_CategoryActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btn_CategoryActionPerformed
         new CategoryManagement().setVisible(true);
@@ -716,6 +732,7 @@ public class ProductManagement extends javax.swing.JFrame {
     private javax.swing.JButton btn_clear;
     private javax.swing.JButton btn_delete;
     private javax.swing.JButton btn_save;
+    private javax.swing.JButton btn_supplier;
     private javax.swing.JButton btn_update;
     private javax.swing.JComboBox<String> cmb_Category;
     private javax.swing.JPanel jPanel1;

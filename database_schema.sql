@@ -48,6 +48,33 @@ CREATE TABLE product (
 ) ENGINE=InnoDB;
 
 -- =========================================
+-- Table: supplier
+-- Description: Store supplier information
+-- =========================================
+CREATE TABLE supplier (
+    supplier_id INT AUTO_INCREMENT PRIMARY KEY,
+    supplier_name VARCHAR(100) NOT NULL,
+    company_name VARCHAR(150) NOT NULL,
+    phone VARCHAR(15) NOT NULL
+) ENGINE=InnoDB;
+
+-- =========================================
+-- Table: supplier_product
+-- Description: Link suppliers with products they supply
+-- =========================================
+CREATE TABLE supplier_product (
+    sp_id INT AUTO_INCREMENT PRIMARY KEY,
+    supplier_id INT NOT NULL,
+    product_id INT NOT NULL,
+    buying_price DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (supplier_id) REFERENCES supplier(supplier_id) 
+        ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES product(product_id) 
+        ON UPDATE CASCADE ON DELETE CASCADE,
+    UNIQUE KEY unique_supplier_product (supplier_id, product_id)
+) ENGINE=InnoDB;
+
+-- =========================================
 -- Insert Sample Data
 -- =========================================
 
@@ -113,6 +140,16 @@ INSERT INTO product (product_name, category_id, price) VALUES
 ('Toothpaste 100g', 14, 220.00),
 ('Dish Soap 500ml', 15, 320.00),
 ('Laundry Detergent 1kg', 15, 650.00);
+
+INSERT INTO supplier (supplier_name, company_name, phone) VALUES
+('Nimal Perera', 'Nimal Traders', '0771234567'),
+('Kamal Fernando', 'Kamal & Sons', '0712345678'),
+('Sunil Silva', 'Silva Distributors', '0759876543'),
+('Ruwan Jayasinghe', 'Jayasinghe Supplies', '0763456789'),
+('Ajith Kumara', 'Ajith Wholesale', '0704567890'),
+('Saman Wickramasinghe', 'Wickrama Enterprises', '0723344556'),
+('Pradeep Gunaratne', 'Gunaratne Trading Co.', '0789988776'),
+('Tharindu Weerasinghe', 'Weera Suppliers', '0741122334');
 
 -- =========================================
 -- End of Database Schema
