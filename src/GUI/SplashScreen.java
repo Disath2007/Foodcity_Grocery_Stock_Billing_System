@@ -9,8 +9,9 @@ package GUI;
  * @author Disath Damsutha
  */
 public class SplashScreen extends javax.swing.JFrame {
-    
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(SplashScreen.class.getName());
+
+    private static final java.util.logging.Logger logger = java.util.logging.Logger
+            .getLogger(SplashScreen.class.getName());
 
     /**
      * Creates new form SplashScreen
@@ -22,28 +23,25 @@ public class SplashScreen extends javax.swing.JFrame {
 
     }
 
-
     public void load() {
-    new Thread(() -> {
-        for (int i = 0; i <= 100; i++) {
-            try {
-                Thread.sleep(10);
-                ProgressBar.setValue(i);
-            } catch (Exception e) {
-                e.printStackTrace();
+        new Thread(() -> {
+            for (int i = 0; i <= 100; i++) {
+                try {
+                    Thread.sleep(10);
+                    ProgressBar.setValue(i);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
-        }
 
-        
-       new LoginFrame().setVisible(true);
-     this.dispose();
-    }).start();
-}
+            new LoginFrame().setVisible(true);
+            this.dispose();
+        }).start();
+    }
 
-    
-    
     @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    // <editor-fold defaultstate="collapsed" desc="Generated
+    // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         ProgressBar = new javax.swing.JProgressBar();
@@ -73,9 +71,13 @@ public class SplashScreen extends javax.swing.JFrame {
      */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+        // <editor-fold defaultstate="collapsed" desc=" Look and feel setting code
+        // (optional) ">
+        /*
+         * If Nimbus (introduced in Java SE 6) is not available, stay with the default
+         * look and feel.
+         * For details see
+         * http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -87,7 +89,7 @@ public class SplashScreen extends javax.swing.JFrame {
         } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
             logger.log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
+        // </editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> new SplashScreen().setVisible(true));
