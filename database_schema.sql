@@ -21,7 +21,7 @@ CREATE TABLE users (
     phone VARCHAR(15),
     role ENUM('Admin', 'Manager', 'Cashier') NOT NULL,
    
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     
 ) ENGINE=InnoDB;
 

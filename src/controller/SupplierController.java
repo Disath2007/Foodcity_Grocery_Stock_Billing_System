@@ -33,7 +33,7 @@ public class SupplierController {
                 "COUNT(sp.product_id) as product_count " +
                 "FROM supplier s LEFT JOIN supplier_product sp ON s.supplier_id = sp.supplier_id " +
                 "GROUP BY s.supplier_id, s.supplier_name, s.company_name, s.phone " +
-                "ORDER BY s.supplier_name";
+                "ORDER BY s.supplier_id";
 
         try (Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql);

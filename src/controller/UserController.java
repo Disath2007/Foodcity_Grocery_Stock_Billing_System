@@ -25,7 +25,7 @@ import java.util.List;
 public class UserController {
 
     /**
-     * Authenticates a user with username and password
+     * Authenticates a user with username and password  
      * 
      * @param username The username
      * @param password The password
@@ -38,7 +38,7 @@ public class UserController {
         }
 
         String sql = "SELECT user_id, username, password, full_name, phone, role, created_at " +
-                "FROM user WHERE username = ? AND password = ?";
+                "FROM users WHERE username = ? AND password = ?";
 
         try (Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -72,7 +72,7 @@ public class UserController {
     public List<User> getAllUsers() {
         List<User> users = new ArrayList<>();
         String sql = "SELECT user_id, username, password, full_name, phone, role, created_at " +
-                "FROM user ORDER BY full_name";
+                "FROM users ORDER BY full_name";
 
         try (Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -103,7 +103,7 @@ public class UserController {
      */
     public User getUserById(int userId) {
         String sql = "SELECT user_id, username, password, full_name, phone, role, created_at " +
-                "FROM user WHERE user_id = ?";
+                "FROM users WHERE user_id = ?";
 
         try (Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -137,7 +137,7 @@ public class UserController {
     public List<User> searchUsers(String searchTerm) {
         List<User> users = new ArrayList<>();
         String sql = "SELECT user_id, username, password, full_name, phone, role, created_at " +
-                "FROM user WHERE full_name LIKE ? OR username LIKE ? ORDER BY full_name";
+                "FROM users WHERE full_name LIKE ? OR username LIKE ? ORDER BY full_name";
 
         try (Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -198,7 +198,7 @@ public class UserController {
             username = username + suffix;
         }
 
-        String sql = "INSERT INTO user (username, password, full_name, phone, role) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO users (username, password, full_name, phone, role) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
@@ -240,9 +240,9 @@ public class UserController {
 
         String sql;
         if (password != null && !password.isEmpty()) {
-            sql = "UPDATE user SET password = ?, full_name = ?, phone = ?, role = ? WHERE user_id = ?";
+            sql = "UPDATE users SET password = ?, full_name = ?, phone = ?, role = ? WHERE user_id = ?";
         } else {
-            sql = "UPDATE user SET full_name = ?, phone = ?, role = ? WHERE user_id = ?";
+            sql = "UPDATE users SET full_name = ?, phone = ?, role = ? WHERE user_id = ?";
         }
 
         try (Connection conn = DatabaseConnection.getConnection();
@@ -288,7 +288,7 @@ public class UserController {
             }
         }
 
-        String sql = "DELETE FROM user WHERE user_id = ?";
+        String sql = "DELETE FROM users WHERE user_id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
@@ -314,7 +314,7 @@ public class UserController {
      * @return true if the username exists, false otherwise
      */
     public boolean isUsernameExists(String username, int excludeId) {
-        String sql = "SELECT COUNT(*) FROM user WHERE username = ? AND user_id != ?";
+        String sql = "SELECT COUNT(*) FROM users WHERE username = ? AND user_id != ?";
         try (Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
@@ -338,7 +338,7 @@ public class UserController {
      * @return Number of users with the specified role
      */
     private int countUsersByRole(String role) {
-        String sql = "SELECT COUNT(*) FROM user WHERE role = ?";
+        String sql = "SELECT COUNT(*) FROM users WHERE role = ?";
         try (Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
