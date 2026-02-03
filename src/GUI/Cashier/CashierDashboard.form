@@ -215,17 +215,28 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Group type="102" attributes="0">
+                                  <Component id="Qty" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="Qty1" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="jSpinner1" min="-2" pref="149" max="-2" attributes="0"/>
+                                  <EmptySpace max="32767" attributes="0"/>
+                                  <Component id="Remove" min="-2" pref="207" max="-2" attributes="0"/>
+                              </Group>
                               <Component id="btn_search" max="32767" attributes="0"/>
                               <Component id="Table_Scroll" alignment="0" pref="1266" max="32767" attributes="0"/>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
-                                  <Component id="Pay_Print" min="-2" pref="241" max="-2" attributes="0"/>
-                                  <EmptySpace type="separate" max="-2" attributes="0"/>
-                                  <Component id="Cancel" min="-2" pref="241" max="-2" attributes="0"/>
-                              </Group>
-                              <Group type="102" alignment="1" attributes="0">
-                                  <Component id="Transaction_Detail" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="32767" attributes="0"/>
+                              <Group type="102" attributes="0">
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Group type="102" alignment="0" attributes="0">
+                                          <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
+                                          <Component id="Pay_Print" min="-2" pref="241" max="-2" attributes="0"/>
+                                          <EmptySpace type="separate" max="-2" attributes="0"/>
+                                          <Component id="Cancel" min="-2" pref="241" max="-2" attributes="0"/>
+                                      </Group>
+                                      <Component id="Transaction_Detail" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace max="-2" attributes="0"/>
                                   <Component id="Transaction_Summary" min="-2" max="-2" attributes="0"/>
                               </Group>
                           </Group>
@@ -238,19 +249,28 @@
                       <Group type="102" alignment="0" attributes="0">
                           <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
                           <Component id="btn_search" min="-2" pref="46" max="-2" attributes="0"/>
-                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                          <Component id="Table_Scroll" min="-2" pref="400" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="53" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="Qty" alignment="3" min="-2" pref="36" max="-2" attributes="0"/>
+                              <Component id="Qty1" alignment="3" min="-2" pref="36" max="-2" attributes="0"/>
+                              <Component id="jSpinner1" alignment="3" min="-2" pref="36" max="-2" attributes="0"/>
+                              <Component id="Remove" alignment="3" min="-2" pref="46" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace pref="43" max="32767" attributes="0"/>
+                          <Component id="Table_Scroll" min="-2" pref="417" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="Transaction_Summary" min="-2" max="-2" attributes="0"/>
-                              <Component id="Transaction_Detail" min="-2" max="-2" attributes="0"/>
+                              <Group type="102" attributes="0">
+                                  <Component id="Transaction_Detail" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" pref="44" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="Cancel" alignment="3" min="-2" pref="59" max="-2" attributes="0"/>
+                                      <Component id="Pay_Print" alignment="3" min="-2" pref="59" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
                           </Group>
-                          <EmptySpace pref="13" max="32767" attributes="0"/>
-                          <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="Pay_Print" alignment="3" min="-2" pref="79" max="-2" attributes="0"/>
-                              <Component id="Cancel" alignment="3" min="-2" pref="79" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace min="-2" pref="42" max="-2" attributes="0"/>
+                          <EmptySpace min="-2" pref="16" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -312,6 +332,9 @@
                           <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
                         </Property>
                       </Properties>
+                      <Events>
+                        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="Cashier_TableMouseClicked"/>
+                      </Events>
                     </Component>
                   </SubComponents>
                 </Container>
@@ -617,7 +640,7 @@
                                   <Group type="102" alignment="0" attributes="0">
                                       <Component id="colon_3" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                      <Component id="txt_Cash1" min="-2" pref="314" max="-2" attributes="0"/>
+                                      <Component id="txt_Discount" min="-2" pref="314" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                               <EmptySpace pref="135" max="32767" attributes="0"/>
@@ -641,7 +664,7 @@
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="103" groupAlignment="3" attributes="0">
                                       <Component id="colon_3" alignment="3" min="-2" pref="36" max="-2" attributes="0"/>
-                                      <Component id="txt_Cash1" alignment="3" min="-2" pref="36" max="-2" attributes="0"/>
+                                      <Component id="txt_Discount" alignment="3" min="-2" pref="36" max="-2" attributes="0"/>
                                   </Group>
                                   <Component id="Discount_lbl1" min="-2" pref="36" max="-2" attributes="0"/>
                               </Group>
@@ -735,10 +758,51 @@
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txt_CashActionPerformed"/>
                       </Events>
                     </Component>
-                    <Component class="javax.swing.JTextField" name="txt_Cash1">
+                    <Component class="javax.swing.JTextField" name="txt_Discount">
                     </Component>
                   </SubComponents>
                 </Container>
+                <Component class="javax.swing.JLabel" name="Qty">
+                  <Properties>
+                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                      <Font name="Unispace" size="18" style="0"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" value="Qty"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JLabel" name="Qty1">
+                  <Properties>
+                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                      <Font name="Unispace" size="18" style="0"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" value=":"/>
+                  </Properties>
+                </Component>
+                <Component class="javax.swing.JSpinner" name="jSpinner1">
+                </Component>
+                <Component class="javax.swing.JButton" name="Remove">
+                  <Properties>
+                    <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                      <Color blue="66" green="66" red="ff" type="rgb"/>
+                    </Property>
+                    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                      <Font name="Unispace" size="18" style="1"/>
+                    </Property>
+                    <Property name="text" type="java.lang.String" value="Remove"/>
+                    <Property name="toolTipText" type="java.lang.String" value=""/>
+                    <Property name="alignmentX" type="float" value="0.5"/>
+                    <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                      <Border info="null"/>
+                    </Property>
+                    <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
+                      <Color id="Hand Cursor"/>
+                    </Property>
+                    <Property name="horizontalTextPosition" type="int" value="0"/>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="RemoveActionPerformed"/>
+                  </Events>
+                </Component>
               </SubComponents>
             </Container>
             <Container class="javax.swing.JPanel" name="Left_Panel">

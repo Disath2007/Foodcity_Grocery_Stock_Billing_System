@@ -109,7 +109,11 @@ public class CashierDashboard extends javax.swing.JFrame {
         colon_3 = new javax.swing.JLabel();
         Total_V1 = new javax.swing.JLabel();
         txt_Cash = new javax.swing.JTextField();
-        txt_Cash1 = new javax.swing.JTextField();
+        txt_Discount = new javax.swing.JTextField();
+        Qty = new javax.swing.JLabel();
+        Qty1 = new javax.swing.JLabel();
+        jSpinner1 = new javax.swing.JSpinner();
+        Remove = new javax.swing.JButton();
         Left_Panel = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         Calculater_Panel = new javax.swing.JPanel();
@@ -219,6 +223,11 @@ public class CashierDashboard extends javax.swing.JFrame {
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
+            }
+        });
+        Cashier_Table.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                Cashier_TableMouseClicked(evt);
             }
         });
         Table_Scroll.setViewportView(Cashier_Table);
@@ -448,7 +457,7 @@ public class CashierDashboard extends javax.swing.JFrame {
                     .addGroup(Transaction_DetailLayout.createSequentialGroup()
                         .addComponent(colon_3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txt_Cash1, javax.swing.GroupLayout.PREFERRED_SIZE, 314, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(txt_Discount, javax.swing.GroupLayout.PREFERRED_SIZE, 314, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(135, Short.MAX_VALUE))
         );
         Transaction_DetailLayout.setVerticalGroup(
@@ -466,10 +475,30 @@ public class CashierDashboard extends javax.swing.JFrame {
                 .addGroup(Transaction_DetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(Transaction_DetailLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(colon_3, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(txt_Cash1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(txt_Discount, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(Discount_lbl1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(41, Short.MAX_VALUE))
         );
+
+        Qty.setFont(new java.awt.Font("Unispace", 0, 18)); // NOI18N
+        Qty.setText("Qty");
+
+        Qty1.setFont(new java.awt.Font("Unispace", 0, 18)); // NOI18N
+        Qty1.setText(":");
+
+        Remove.setBackground(new java.awt.Color(255, 102, 102));
+        Remove.setFont(new java.awt.Font("Unispace", 1, 18)); // NOI18N
+        Remove.setText("Remove");
+        Remove.setToolTipText("");
+        Remove.setAlignmentX(0.5F);
+        Remove.setBorder(null);
+        Remove.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        Remove.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        Remove.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                RemoveActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout Right_PanelLayout = new javax.swing.GroupLayout(Right_Panel);
         Right_Panel.setLayout(Right_PanelLayout);
@@ -478,16 +507,25 @@ public class CashierDashboard extends javax.swing.JFrame {
             .addGroup(Right_PanelLayout.createSequentialGroup()
                 .addGap(21, 21, 21)
                 .addGroup(Right_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(Right_PanelLayout.createSequentialGroup()
+                        .addComponent(Qty)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(Qty1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(Remove, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(btn_search)
                     .addComponent(Table_Scroll, javax.swing.GroupLayout.DEFAULT_SIZE, 1266, Short.MAX_VALUE)
                     .addGroup(Right_PanelLayout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(Pay_Print, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(Cancel, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, Right_PanelLayout.createSequentialGroup()
-                        .addComponent(Transaction_Detail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(Right_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(Right_PanelLayout.createSequentialGroup()
+                                .addGap(6, 6, 6)
+                                .addComponent(Pay_Print, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(Cancel, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(Transaction_Detail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(Transaction_Summary, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(31, Short.MAX_VALUE))
         );
@@ -496,17 +534,24 @@ public class CashierDashboard extends javax.swing.JFrame {
             .addGroup(Right_PanelLayout.createSequentialGroup()
                 .addGap(21, 21, 21)
                 .addComponent(btn_search, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(Table_Scroll, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(53, 53, 53)
+                .addGap(23, 23, 23)
+                .addGroup(Right_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(Qty, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Qty1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(Remove, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 43, Short.MAX_VALUE)
+                .addComponent(Table_Scroll, javax.swing.GroupLayout.PREFERRED_SIZE, 417, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(28, 28, 28)
                 .addGroup(Right_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(Transaction_Summary, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(Transaction_Detail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
-                .addGroup(Right_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(Pay_Print, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(Cancel, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(42, 42, 42))
+                    .addGroup(Right_PanelLayout.createSequentialGroup()
+                        .addComponent(Transaction_Detail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(44, 44, 44)
+                        .addGroup(Right_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(Cancel, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(Pay_Print, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(16, 16, 16))
         );
 
         Left_Panel.setBackground(new java.awt.Color(243, 247, 244));
@@ -771,6 +816,14 @@ public class CashierDashboard extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txt_CashActionPerformed
 
+    private void Cashier_TableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Cashier_TableMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_Cashier_TableMouseClicked
+
+    private void RemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RemoveActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_RemoveActionPerformed
+
     private void btn_Void_ItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btn_Void_ItemActionPerformed
 
     }// GEN-LAST:event_btn_Void_ItemActionPerformed
@@ -848,8 +901,11 @@ public class CashierDashboard extends javax.swing.JFrame {
     private javax.swing.JButton Logout_btn;
     private javax.swing.JPanel Main_Panel;
     private javax.swing.JButton Pay_Print;
+    private javax.swing.JLabel Qty;
+    private javax.swing.JLabel Qty1;
     private javax.swing.JPanel Quick_Action;
     private javax.swing.JLabel Quick_Action_lbl;
+    private javax.swing.JButton Remove;
     private javax.swing.JPanel Right_Panel;
     private javax.swing.JScrollPane Table_Scroll;
     private javax.swing.JPanel Top_Panel;
@@ -875,11 +931,12 @@ public class CashierDashboard extends javax.swing.JFrame {
     private javax.swing.JLabel colon_3;
     private javax.swing.JLabel colon_5;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JSpinner jSpinner1;
     private javax.swing.JPanel top_panel_QA;
     private javax.swing.JPanel top_panel_TD;
     private javax.swing.JPanel top_panel_TD1;
     private javax.swing.JPanel top_panel_TS;
     private javax.swing.JTextField txt_Cash;
-    private javax.swing.JTextField txt_Cash1;
+    private javax.swing.JTextField txt_Discount;
     // End of variables declaration//GEN-END:variables
 }
