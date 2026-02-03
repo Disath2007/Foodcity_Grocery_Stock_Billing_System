@@ -48,6 +48,19 @@ CREATE TABLE product (
 ) ENGINE=InnoDB;
 
 -- =========================================
+-- Table: stock
+-- Description: Store product stock quantities
+-- =========================================
+CREATE TABLE stock (
+    stock_id INT AUTO_INCREMENT PRIMARY KEY,
+    product_id INT NOT NULL UNIQUE,
+    quantity INT NOT NULL DEFAULT 0,
+    last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (product_id) REFERENCES product(product_id) 
+        ON UPDATE CASCADE ON DELETE RESTRICT
+) ENGINE=InnoDB;
+
+-- =========================================
 -- Table: supplier
 -- Description: Store supplier information
 -- =========================================
@@ -150,6 +163,46 @@ INSERT INTO supplier (supplier_name, company_name, phone) VALUES
 ('Saman Wickramasinghe', 'Wickrama Enterprises', '0723344556'),
 ('Pradeep Gunaratne', 'Gunaratne Trading Co.', '0789988776'),
 ('Tharindu Weerasinghe', 'Weera Suppliers', '0741122334');
+
+-- Sample Stock Data (Dummy Quantities for all products)
+INSERT INTO stock (product_id, quantity) VALUES
+(1, 120),   -- Fresh Milk 1L
+(2, 85),    -- Cheddar Cheese 200g
+(3, 95),    -- Butter 250g
+(4, 200),   -- Yogurt Cup 150g
+(5, 150),   -- Coca Cola 1.5L
+(6, 180),   -- Sprite 500ml
+(7, 75),    -- Orange Juice 1L
+(8, 250),   -- Mineral Water 1L
+(9, 140),   -- White Bread Loaf
+(10, 60),   -- Croissant
+(11, 90),   -- Apple 1kg
+(12, 110),  -- Banana 1kg
+(13, 85),   -- Orange 1kg
+(14, 130),  -- Carrot 500g
+(15, 145),  -- Tomato 500g
+(16, 160),  -- Onion 1kg
+(17, 55),   -- Chicken Breast 500g
+(18, 65),   -- Ground Beef 500g
+(19, 35),   -- Salmon Fillet 250g
+(20, 40),   -- Shrimp 500g
+(21, 70),   -- Frozen Pizza
+(22, 80),   -- Ice Cream 1L
+(23, 190),  -- Canned Beans 400g
+(24, 200),  -- Canned Corn 400g
+(25, 175),  -- Potato Chips 150g
+(26, 220),  -- Chocolate Bar 100g
+(27, 95),   -- Ketchup 500ml
+(28, 85),   -- Mayonnaise 250g
+(29, 110),  -- Black Pepper 50g
+(30, 125),  -- Chili Powder 100g
+(31, 45),   -- Rice 5kg
+(32, 150),  -- Spaghetti 500g
+(33, 100),  -- Shampoo 250ml
+(34, 210),  -- Toothpaste 100g
+(35, 120),  -- Dish Soap 500ml
+(36, 75),   -- Laundry Detergent 1kg
+
 
 -- =========================================
 -- End of Database Schema

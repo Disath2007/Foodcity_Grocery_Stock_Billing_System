@@ -5,6 +5,9 @@
 package GUI.Manager;
 // Add these imports at the TOP
 import GUI.LoginFrame;
+import controller.StockController;  // ADD THIS LINE
+import model.Stock;                 // ADD THIS LINE
+import java.util.List;     
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -22,14 +25,21 @@ public class ManagerDashboard extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(ManagerDashboard.class.getName());
     private ChartPanel chartPanel; 
+    
+    private StockController stockController;
+    private javax.swing.Timer refreshTimer;
+    private static final int REFRESH_INTERVAL = 10000;
     /**
      * Creates new form AdminDashboard
      */
     public ManagerDashboard() {
+        stockController = new StockController();  
         initComponents();
         setLocationRelativeTo(null);
         createChart();  
         this.setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+        loadLowStockAlerts(); 
+        startAutoRefresh();  
 
     }
     
@@ -84,6 +94,86 @@ public class ManagerDashboard extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Error creating chart: " + e.getMessage());
         }
     }
+    
+    
+    /**
+ * Loads and displays low stock items
+ */
+private void loadLowStockAlerts() {
+    int LOW_STOCK_THRESHOLD = 50;
+    
+    try {
+        List<Stock> lowStockList = stockController.getLowStockItems(LOW_STOCK_THRESHOLD);
+        
+        txt_lowStockArea.setText("");  // Change to YOUR text area component name
+        
+        if (lowStockList.isEmpty()) {
+            txt_lowStockArea.setText("\n  All stock levels are good!\n\n" +
+                                     "  No items below " + LOW_STOCK_THRESHOLD + " units.");
+        } else {
+            StringBuilder alertText = new StringBuilder();
+            alertText.append(" Items Running Low\n");
+            alertText.append(" ════════════════════════\n\n");
+            
+            for (Stock stock : lowStockList) {
+                String urgency = getUrgencyLevel(stock.getQuantity());
+                alertText.append(String.format(" %s %s\n", urgency, stock.getProductName()));
+                alertText.append(String.format("    Qty: %d | %s\n", 
+                    stock.getQuantity(), stock.getCategoryName()));
+                alertText.append("    ─────────────────\n");
+            }
+            
+            alertText.append("\n");
+            alertText.append(String.format(" Total: %d items need attention", lowStockList.size()));
+            
+            txt_lowStockArea.setText(alertText.toString());
+            txt_lowStockArea.setCaretPosition(0);
+        }
+    } catch (Exception e) {
+        txt_lowStockArea.setText("\n  Error loading stock alerts:\n  " + e.getMessage());
+        e.printStackTrace();
+    }
+}
+private String getUrgencyLevel(int quantity) {
+    if (quantity < 20) {
+        return "[CRITICAL]";  
+    } else if (quantity < 40) {
+        return "[WARNING] ";  
+    } else {
+        return "[LOW]     ";  
+    }
+}
+/**
+ * Starts auto-refresh timer
+ */
+private void startAutoRefresh() {
+    refreshTimer = new javax.swing.Timer(REFRESH_INTERVAL, (e) -> {
+        loadLowStockAlerts();
+        System.out.println("Low stock alerts refreshed at: " + 
+            java.time.LocalTime.now());
+    });
+    refreshTimer.setRepeats(true);
+    refreshTimer.start();
+    System.out.println("Auto-refresh started. Refreshing every " + 
+        (REFRESH_INTERVAL / 1000) + " seconds");
+}
+/**
+ * Stops auto-refresh timer
+ */
+private void stopAutoRefresh() {
+    if (refreshTimer != null && refreshTimer.isRunning()) {
+        refreshTimer.stop();
+        System.out.println("Auto-refresh stopped");
+    }
+}
+/**
+ * Clean up when window closes
+ */
+@Override
+public void dispose() {
+    stopAutoRefresh();
+    super.dispose();
+}
     // ======== END OF ADDED METHOD ========
 
 
@@ -124,6 +214,10 @@ public class ManagerDashboard extends javax.swing.JFrame {
         lblMonthlyProfit5 = new javax.swing.JLabel();
         jpanelchart = new javax.swing.JPanel();
         lbl_username = new javax.swing.JLabel();
+        jPanel4 = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
+        jScrollPane_lowStock = new javax.swing.JScrollPane();
+        txt_lowStockArea = new javax.swing.JTextArea();
 
         menu1.setLabel("File");
         menuBar1.add(menu1);
@@ -378,18 +472,53 @@ public class ManagerDashboard extends javax.swing.JFrame {
         jpanelchart.setLayout(jpanelchartLayout);
         jpanelchartLayout.setHorizontalGroup(
             jpanelchartLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 380, Short.MAX_VALUE)
+            .addGap(0, 536, Short.MAX_VALUE)
         );
         jpanelchartLayout.setVerticalGroup(
             jpanelchartLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 380, Short.MAX_VALUE)
+            .addGap(0, 606, Short.MAX_VALUE)
         );
 
-        jPanel3.add(jpanelchart, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 50, -1, -1));
+        jPanel3.add(jpanelchart, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 50, 540, 610));
 
         lbl_username.setFont(new java.awt.Font("Unispace", 1, 18)); // NOI18N
         lbl_username.setText("Loarding..");
         jPanel3.add(lbl_username, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 30, -1, 39));
+
+        jPanel4.setBackground(new java.awt.Color(255, 204, 204));
+
+        jLabel3.setFont(new java.awt.Font("Unispace", 1, 14)); // NOI18N
+        jLabel3.setText(" Low Stock Alert");
+
+        txt_lowStockArea.setEditable(false);
+        txt_lowStockArea.setColumns(20);
+        txt_lowStockArea.setRows(5);
+        jScrollPane_lowStock.setViewportView(txt_lowStockArea);
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGap(18, 18, 18)
+                .addComponent(jLabel3)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane_lowStock, javax.swing.GroupLayout.DEFAULT_SIZE, 488, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGap(18, 18, 18)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane_lowStock, javax.swing.GroupLayout.DEFAULT_SIZE, 572, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        jPanel3.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(1110, 40, 500, 620));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -412,6 +541,9 @@ public class ManagerDashboard extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
+    
+    
+    
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
        
     new LoginFrame().setVisible(true);
@@ -483,9 +615,12 @@ public class ManagerDashboard extends javax.swing.JFrame {
     private javax.swing.JButton btnSuppliermanagement;
     private javax.swing.JButton btnproductmanagement;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JScrollPane jScrollPane_lowStock;
     private javax.swing.JPanel jpanelchart;
     private javax.swing.JLabel lblMonthlyProfit;
     private javax.swing.JLabel lblMonthlyProfit1;
@@ -497,5 +632,6 @@ public class ManagerDashboard extends javax.swing.JFrame {
     private java.awt.Menu menu1;
     private java.awt.Menu menu2;
     private java.awt.MenuBar menuBar1;
+    private javax.swing.JTextArea txt_lowStockArea;
     // End of variables declaration//GEN-END:variables
 }
