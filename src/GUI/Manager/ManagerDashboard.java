@@ -200,7 +200,7 @@ public void dispose() {
         btnproductmanagement = new javax.swing.JButton();
         btnReport = new javax.swing.JButton();
         btnSuppliermanagement = new javax.swing.JButton();
-        btnReport1 = new javax.swing.JButton();
+        GRNbtn1 = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         Welcome = new javax.swing.JLabel();
         MonthlyProfit = new javax.swing.JPanel();
@@ -312,17 +312,17 @@ public void dispose() {
             }
         });
 
-        btnReport1.setBackground(new java.awt.Color(147, 202, 55));
-        btnReport1.setFont(new java.awt.Font("Unispace", 1, 12)); // NOI18N
-        btnReport1.setForeground(new java.awt.Color(5, 63, 22));
-        btnReport1.setText("GRN");
-        btnReport1.setAlignmentX(0.5F);
-        btnReport1.setBorder(null);
-        btnReport1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnReport1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btnReport1.addActionListener(new java.awt.event.ActionListener() {
+        GRNbtn1.setBackground(new java.awt.Color(147, 202, 55));
+        GRNbtn1.setFont(new java.awt.Font("Unispace", 1, 12)); // NOI18N
+        GRNbtn1.setForeground(new java.awt.Color(5, 63, 22));
+        GRNbtn1.setText("GRN");
+        GRNbtn1.setAlignmentX(0.5F);
+        GRNbtn1.setBorder(null);
+        GRNbtn1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        GRNbtn1.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        GRNbtn1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnReport1ActionPerformed(evt);
+                GRNbtn1ActionPerformed(evt);
             }
         });
 
@@ -338,7 +338,7 @@ public void dispose() {
                     .addComponent(btnLogout, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnReport, javax.swing.GroupLayout.DEFAULT_SIZE, 228, Short.MAX_VALUE)
                     .addComponent(btnSuppliermanagement, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnReport1, javax.swing.GroupLayout.DEFAULT_SIZE, 228, Short.MAX_VALUE))
+                    .addComponent(GRNbtn1, javax.swing.GroupLayout.DEFAULT_SIZE, 228, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addGap(0, 39, Short.MAX_VALUE)
@@ -357,7 +357,7 @@ public void dispose() {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnReport, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnReport1, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(GRNbtn1, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnStockmanagement, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 542, Short.MAX_VALUE)
@@ -571,9 +571,10 @@ public void dispose() {
     this.dispose();
     }//GEN-LAST:event_btnSuppliermanagementActionPerformed
 
-    private void btnReport1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReport1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnReport1ActionPerformed
+    private void GRNbtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GRNbtn1ActionPerformed
+                  new GRN().setVisible(true);
+    this.dispose();  // TODO add your handling code here:
+    }//GEN-LAST:event_GRNbtn1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -604,13 +605,13 @@ public void dispose() {
  
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton GRNbtn1;
     private javax.swing.JPanel MonthlyProfit;
     private javax.swing.JPanel TodaySales;
     private javax.swing.JPanel TotalSales;
     private javax.swing.JLabel Welcome;
     private javax.swing.JButton btnLogout;
     private javax.swing.JButton btnReport;
-    private javax.swing.JButton btnReport1;
     private javax.swing.JButton btnStockmanagement;
     private javax.swing.JButton btnSuppliermanagement;
     private javax.swing.JButton btnproductmanagement;
