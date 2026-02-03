@@ -75,9 +75,9 @@
                   <Group type="102" alignment="1" attributes="0">
                       <Component id="IMG_Logo" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="User" min="-2" pref="286" max="-2" attributes="0"/>
+                      <Component id="DateTime" min="-2" pref="286" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
-                      <Component id="DateTime" min="-2" pref="204" max="-2" attributes="0"/>
+                      <Component id="User" min="-2" pref="204" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="Logout_btn" min="-2" pref="190" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="27" max="-2" attributes="0"/>
@@ -95,8 +95,8 @@
                           </Group>
                           <Component id="IMG_Logo" alignment="0" max="32767" attributes="0"/>
                           <Group type="103" alignment="0" groupAlignment="3" attributes="0">
-                              <Component id="DateTime" alignment="3" pref="58" max="32767" attributes="0"/>
                               <Component id="User" alignment="3" pref="58" max="32767" attributes="0"/>
+                              <Component id="DateTime" alignment="3" pref="58" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
@@ -105,7 +105,7 @@
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JLabel" name="DateTime">
+            <Component class="javax.swing.JLabel" name="User">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Unispace" size="18" style="0"/>
@@ -116,7 +116,7 @@
                 <Property name="text" type="java.lang.String" value="USer ...."/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JLabel" name="User">
+            <Component class="javax.swing.JLabel" name="DateTime">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Unispace" size="18" style="0"/>
@@ -377,11 +377,11 @@
                                   </Group>
                               </Group>
                               <EmptySpace min="-2" pref="49" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="Total_V" min="-2" max="-2" attributes="0"/>
-                                  <Component id="Item_Count_V" min="-2" max="-2" attributes="0"/>
-                                  <Component id="Grand_Total_V" min="-2" max="-2" attributes="0"/>
-                                  <Component id="Discount_V" alignment="0" min="-2" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="Item_Count_V" alignment="0" pref="280" max="32767" attributes="0"/>
+                                  <Component id="Total_V" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="Discount_V" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="Grand_Total_V" alignment="0" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace max="32767" attributes="0"/>
                           </Group>
@@ -515,7 +515,7 @@
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Unispace" size="18" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Total....."/>
+                        <Property name="horizontalAlignment" type="int" value="0"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JLabel" name="Discount_V">
@@ -523,7 +523,6 @@
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Unispace" size="18" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Discount..."/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JLabel" name="Item_Count_V">
@@ -531,7 +530,6 @@
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Unispace" size="18" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Item_count..."/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JLabel" name="Grand_Total_lbl">
@@ -555,7 +553,6 @@
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Unispace" size="18" style="0"/>
                         </Property>
-                        <Property name="text" type="java.lang.String" value="Grand_Total..."/>
                       </Properties>
                     </Component>
                   </SubComponents>

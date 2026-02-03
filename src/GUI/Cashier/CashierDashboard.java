@@ -74,8 +74,8 @@ public class CashierDashboard extends javax.swing.JFrame {
 
         Main_Panel = new javax.swing.JPanel();
         Top_Panel = new javax.swing.JPanel();
-        DateTime = new javax.swing.JLabel();
         User = new javax.swing.JLabel();
+        DateTime = new javax.swing.JLabel();
         IMG_Logo = new rojerusan.RSPanelImage();
         Logout_btn = new javax.swing.JButton();
         Bottom_Panel = new javax.swing.JPanel();
@@ -134,13 +134,13 @@ public class CashierDashboard extends javax.swing.JFrame {
         Top_Panel.setBackground(new java.awt.Color(4, 63, 23));
         Top_Panel.setPreferredSize(new java.awt.Dimension(1910, 70));
 
-        DateTime.setFont(new java.awt.Font("Unispace", 0, 18)); // NOI18N
-        DateTime.setForeground(new java.awt.Color(255, 255, 255));
-        DateTime.setText("USer ....");
-
         User.setFont(new java.awt.Font("Unispace", 0, 18)); // NOI18N
         User.setForeground(new java.awt.Color(255, 255, 255));
-        User.setText("Time & Date .....");
+        User.setText("USer ....");
+
+        DateTime.setFont(new java.awt.Font("Unispace", 0, 18)); // NOI18N
+        DateTime.setForeground(new java.awt.Color(255, 255, 255));
+        DateTime.setText("Time & Date .....");
 
         IMG_Logo.setImagen(new javax.swing.ImageIcon(getClass().getResource("/IMG/Logo.png"))); // NOI18N
 
@@ -175,9 +175,9 @@ public class CashierDashboard extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, Top_PanelLayout.createSequentialGroup()
                 .addComponent(IMG_Logo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(User, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(DateTime, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(DateTime, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(User, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(Logout_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(27, 27, 27))
@@ -192,8 +192,8 @@ public class CashierDashboard extends javax.swing.JFrame {
                         .addGap(1, 1, 1))
                     .addComponent(IMG_Logo, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, Top_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(DateTime, javax.swing.GroupLayout.DEFAULT_SIZE, 58, Short.MAX_VALUE)
-                        .addComponent(User, javax.swing.GroupLayout.DEFAULT_SIZE, 58, Short.MAX_VALUE)))
+                        .addComponent(User, javax.swing.GroupLayout.DEFAULT_SIZE, 58, Short.MAX_VALUE)
+                        .addComponent(DateTime, javax.swing.GroupLayout.DEFAULT_SIZE, 58, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -289,13 +289,11 @@ public class CashierDashboard extends javax.swing.JFrame {
         colon_03.setText(":");
 
         Total_V.setFont(new java.awt.Font("Unispace", 0, 18)); // NOI18N
-        Total_V.setText("Total.....");
+        Total_V.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 
         Discount_V.setFont(new java.awt.Font("Unispace", 0, 18)); // NOI18N
-        Discount_V.setText("Discount...");
 
         Item_Count_V.setFont(new java.awt.Font("Unispace", 0, 18)); // NOI18N
-        Item_Count_V.setText("Item_count...");
 
         Grand_Total_lbl.setFont(new java.awt.Font("Unispace", 0, 18)); // NOI18N
         Grand_Total_lbl.setText("Grand Total");
@@ -304,7 +302,6 @@ public class CashierDashboard extends javax.swing.JFrame {
         colon_5.setText(":");
 
         Grand_Total_V.setFont(new java.awt.Font("Unispace", 0, 18)); // NOI18N
-        Grand_Total_V.setText("Grand_Total...");
 
         javax.swing.GroupLayout Transaction_SummaryLayout = new javax.swing.GroupLayout(Transaction_Summary);
         Transaction_Summary.setLayout(Transaction_SummaryLayout);
@@ -329,11 +326,11 @@ public class CashierDashboard extends javax.swing.JFrame {
                             .addComponent(colon_02)
                             .addComponent(colon_03))))
                 .addGap(49, 49, 49)
-                .addGroup(Transaction_SummaryLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(Total_V)
-                    .addComponent(Item_Count_V)
-                    .addComponent(Grand_Total_V)
-                    .addComponent(Discount_V))
+                .addGroup(Transaction_SummaryLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(Item_Count_V, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)
+                    .addComponent(Total_V, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(Discount_V, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(Grand_Total_V, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         Transaction_SummaryLayout.setVerticalGroup(
