@@ -106,7 +106,7 @@
                           <Component id="btnLogout" max="32767" attributes="0"/>
                           <Component id="btnReport" alignment="0" pref="228" max="32767" attributes="0"/>
                           <Component id="btnSuppliermanagement" alignment="0" max="32767" attributes="0"/>
-                          <Component id="btnReport1" alignment="0" pref="228" max="32767" attributes="0"/>
+                          <Component id="GRNbtn1" alignment="0" pref="228" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
@@ -129,7 +129,7 @@
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="btnReport" min="-2" pref="51" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="btnReport1" min="-2" pref="51" max="-2" attributes="0"/>
+                      <Component id="GRNbtn1" min="-2" pref="51" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="btnStockmanagement" min="-2" pref="51" max="-2" attributes="0"/>
                       <EmptySpace pref="542" max="32767" attributes="0"/>
@@ -276,7 +276,7 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSuppliermanagementActionPerformed"/>
               </Events>
             </Component>
-            <Component class="javax.swing.JButton" name="btnReport1">
+            <Component class="javax.swing.JButton" name="GRNbtn1">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="37" green="ca" red="93" type="rgb"/>
@@ -298,7 +298,7 @@
                 <Property name="horizontalTextPosition" type="int" value="0"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnReport1ActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="GRNbtn1ActionPerformed"/>
               </Events>
             </Component>
           </SubComponents>
