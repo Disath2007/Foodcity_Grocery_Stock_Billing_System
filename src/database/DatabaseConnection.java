@@ -23,7 +23,7 @@ public class DatabaseConnection {
             Connection conn = DriverManager.getConnection(
                     "jdbc:mysql://localhost:3306/foodcity_db",
                     "root",
-                    "Lakindu@123");
+                    "Disath06@#");
 
             System.out.println("Success");
             return conn;

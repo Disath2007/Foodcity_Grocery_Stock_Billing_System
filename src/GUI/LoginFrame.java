@@ -5,6 +5,7 @@
 package GUI;
 
 import GUI.Admin.AdminDashboard;
+import GUI.Cashier.CashierDashboard;
 import GUI.Manager.ManagerDashboard;
 import javax.swing.JOptionPane;
 // MVC Imports - Using Controller instead of direct database access
@@ -216,7 +217,7 @@ public class LoginFrame extends javax.swing.JFrame {
                         } else if ("Manager".equalsIgnoreCase(role)) {
                                 new ManagerDashboard().setVisible(true);
                         } else {
-                                JOptionPane.showMessageDialog(this, "Cashier dashboard still under development!");
+                                new CashierDashboard().setVisible(true);
                         }
                         this.dispose();
                 } else {
