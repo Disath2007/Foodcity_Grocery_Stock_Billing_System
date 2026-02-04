@@ -105,10 +105,10 @@ public class Supplier_Product extends javax.swing.JFrame {
 
                 },
                 new String[] {
-                        "ID", "Item_Name", "Category", "Buying_Price"
+                        "ID", "Item_Name", "Category"
                 }) {
             boolean[] canEdit = new boolean[] {
-                    false, false, false, false
+                    false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -407,7 +407,6 @@ public class Supplier_Product extends javax.swing.JFrame {
         if (selectedRow >= 0) {
             selectedSpId = Integer.parseInt(supplier_product_Table.getValueAt(selectedRow, 0).toString());
             String productName = supplier_product_Table.getValueAt(selectedRow, 1).toString();
-            String buyingPrice = supplier_product_Table.getValueAt(selectedRow, 3).toString();
 
             // Find and select product in combo box
             for (int i = 0; i < cmb_item.getItemCount(); i++) {
@@ -416,7 +415,7 @@ public class Supplier_Product extends javax.swing.JFrame {
                     break;
                 }
             }
-            txt_buyingprice.setText(buyingPrice);
+            // txt_buyingprice.setText(buyingPrice);
         }
     }
 
@@ -482,7 +481,7 @@ public class Supplier_Product extends javax.swing.JFrame {
         DefaultTableModel model = (DefaultTableModel) supplier_product_Table.getModel();
         model.setRowCount(0);
 
-        String sql = "SELECT sp.sp_id, p.product_name, c.category_name, sp.buying_price " +
+        String sql = "SELECT sp.sp_id, p.product_name, c.category_name " +
                 "FROM supplier_product sp " +
                 "JOIN product p ON sp.product_id = p.product_id " +
                 "JOIN category c ON p.category_id = c.category_id " +
@@ -498,9 +497,8 @@ public class Supplier_Product extends javax.swing.JFrame {
                     int spId = rs.getInt("sp_id");
                     String productName = rs.getString("product_name");
                     String categoryName = rs.getString("category_name");
-                    double buyingPrice = rs.getDouble("buying_price");
 
-                    model.addRow(new Object[] { spId, productName, categoryName, buyingPrice });
+                    model.addRow(new Object[] { spId, productName, categoryName });
                 }
             }
 
@@ -547,33 +545,10 @@ public class Supplier_Product extends javax.swing.JFrame {
     }
 
     /**
-     * Get the selling price of a product from the database
-     */
-    private double getProductSellingPrice(int productId) {
-        String sql = "SELECT price FROM product WHERE product_id = ?";
-
-        try (Connection conn = DatabaseConnection.getConnection();
-                PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-            pstmt.setInt(1, productId);
-            try (ResultSet rs = pstmt.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getDouble("price");
-                }
-            }
-
-        } catch (SQLException e) {
-            // Return 0 if there's an error
-        }
-        return 0;
-    }
-
-    /**
      * Add a new supplier-product relationship
      */
     private void addSupplierProduct() {
         int productId = getSelectedProductId();
-        String buyingPriceStr = txt_buyingprice.getText().trim();
 
         if (productId == -1) {
             JOptionPane.showMessageDialog(this, "Please select a product!",
@@ -581,39 +556,13 @@ public class Supplier_Product extends javax.swing.JFrame {
             return;
         }
 
-        if (buyingPriceStr.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please enter the buying price!",
-                    "Validation Error", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        double buyingPrice;
-        try {
-            buyingPrice = Double.parseDouble(buyingPriceStr);
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Please enter a valid price!",
-                    "Validation Error", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        // Validate: Buying price must be less than selling price
-        double sellingPrice = getProductSellingPrice(productId);
-        if (sellingPrice > 0 && buyingPrice >= sellingPrice) {
-            JOptionPane.showMessageDialog(this,
-                    "Buying price (Rs. " + buyingPrice + ") must be less than selling price (Rs. " + sellingPrice
-                            + ")!",
-                    "Price Validation Error", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        String sql = "INSERT INTO supplier_product (supplier_id, product_id, buying_price) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO supplier_product (supplier_id, product_id) VALUES (?, ?)";
 
         try (Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, supplierId);
             pstmt.setInt(2, productId);
-            pstmt.setDouble(3, buyingPrice);
             int rowsAffected = pstmt.executeUpdate();
 
             if (rowsAffected > 0) {
@@ -638,48 +587,9 @@ public class Supplier_Product extends javax.swing.JFrame {
      * Update the selected supplier-product relationship
      */
     private void updateSupplierProduct() {
-        if (selectedSpId == -1) {
-            JOptionPane.showMessageDialog(this, "Please select a product from the table to update!",
-                    "Selection Error", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        String buyingPriceStr = txt_buyingprice.getText().trim();
-        if (buyingPriceStr.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please enter the buying price!",
-                    "Validation Error", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        double buyingPrice;
-        try {
-            buyingPrice = Double.parseDouble(buyingPriceStr);
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Please enter a valid price!",
-                    "Validation Error", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        String sql = "UPDATE supplier_product SET buying_price = ? WHERE sp_id = ?";
-
-        try (Connection conn = DatabaseConnection.getConnection();
-                PreparedStatement pstmt = conn.prepareStatement(sql)) {
-
-            pstmt.setDouble(1, buyingPrice);
-            pstmt.setInt(2, selectedSpId);
-            int rowsAffected = pstmt.executeUpdate();
-
-            if (rowsAffected > 0) {
-                JOptionPane.showMessageDialog(this, "Buying price updated successfully!",
-                        "Success", JOptionPane.INFORMATION_MESSAGE);
-                clearFields();
-                loadSupplierProducts();
-            }
-
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, "Error updating: " + e.getMessage(),
-                    "Database Error", JOptionPane.ERROR_MESSAGE);
-        }
+        // Feature removed as Buying Price is now managed in Product Management
+        JOptionPane.showMessageDialog(this, "Buying Price is now managed in Product Management.",
+                "Feature Updated", JOptionPane.INFORMATION_MESSAGE);
     }
 
     /**
@@ -735,7 +645,7 @@ public class Supplier_Product extends javax.swing.JFrame {
         DefaultTableModel model = (DefaultTableModel) supplier_product_Table.getModel();
         model.setRowCount(0);
 
-        String sql = "SELECT sp.sp_id, p.product_name, c.category_name, sp.buying_price " +
+        String sql = "SELECT sp.sp_id, p.product_name, c.category_name " +
                 "FROM supplier_product sp " +
                 "JOIN product p ON sp.product_id = p.product_id " +
                 "JOIN category c ON p.category_id = c.category_id " +
@@ -754,9 +664,8 @@ public class Supplier_Product extends javax.swing.JFrame {
                     int spId = rs.getInt("sp_id");
                     String productName = rs.getString("product_name");
                     String categoryName = rs.getString("category_name");
-                    double buyingPrice = rs.getDouble("buying_price");
 
-                    model.addRow(new Object[] { spId, productName, categoryName, buyingPrice });
+                    model.addRow(new Object[] { spId, productName, categoryName });
                 }
             }
 

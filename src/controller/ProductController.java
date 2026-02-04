@@ -30,7 +30,7 @@ public class ProductController {
      */
     public List<Product> getAllProducts() {
         List<Product> products = new ArrayList<>();
-        String sql = "SELECT p.product_id, p.product_name, p.category_id, c.category_name, p.price " +
+        String sql = "SELECT p.product_id, p.product_name, p.category_id, c.category_name, p.price, p.buying_price " +
                 "FROM product p JOIN category c ON p.category_id = c.category_id " +
                 "ORDER BY p.product_name";
 
@@ -44,7 +44,8 @@ public class ProductController {
                         rs.getString("product_name"),
                         rs.getInt("category_id"),
                         rs.getString("category_name"),
-                        rs.getDouble("price"));
+                        rs.getDouble("price"),
+                        rs.getDouble("buying_price"));
                 products.add(product);
             }
         } catch (SQLException e) {
@@ -61,7 +62,7 @@ public class ProductController {
      */
     public List<Product> searchProducts(String searchTerm) {
         List<Product> products = new ArrayList<>();
-        String sql = "SELECT p.product_id, p.product_name, p.category_id, c.category_name, p.price " +
+        String sql = "SELECT p.product_id, p.product_name, p.category_id, c.category_name, p.price, p.buying_price " +
                 "FROM product p JOIN category c ON p.category_id = c.category_id " +
                 "WHERE p.product_name LIKE ? " +
                 "ORDER BY p.product_name";
@@ -77,7 +78,8 @@ public class ProductController {
                             rs.getString("product_name"),
                             rs.getInt("category_id"),
                             rs.getString("category_name"),
-                            rs.getDouble("price"));
+                            rs.getDouble("price"),
+                            rs.getDouble("buying_price"));
                     products.add(product);
                 }
             }
@@ -120,7 +122,7 @@ public class ProductController {
      * @param price       Price as string (will be parsed)
      * @return String message indicating success or error
      */
-    public String addProduct(String productName, Category category, String price) {
+    public String addProduct(String productName, Category category, String price, String buyingPrice) {
         // Validate inputs
         if (productName == null || productName.trim().isEmpty()) {
             return "Error: Product name cannot be empty!";
@@ -130,10 +132,12 @@ public class ProductController {
         }
 
         double priceValue;
+        double buyingPriceValue;
         try {
             priceValue = Double.parseDouble(price);
-            if (priceValue < 0) {
-                return "Error: Price cannot be negative!";
+            buyingPriceValue = Double.parseDouble(buyingPrice);
+            if (priceValue < 0 || buyingPriceValue < 0) {
+                return "Error: Prices cannot be negative!";
             }
         } catch (NumberFormatException e) {
             return "Error: Invalid price format!";
@@ -144,13 +148,14 @@ public class ProductController {
             return "Error: Product name already exists!";
         }
 
-        String sql = "INSERT INTO product (product_name, category_id, price) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO product (product_name, category_id, price, buying_price) VALUES (?, ?, ?, ?)";
         try (Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, productName.trim());
             pstmt.setInt(2, category.getCategoryId());
             pstmt.setDouble(3, priceValue);
+            pstmt.setDouble(4, buyingPriceValue);
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
                 return "Success: Product added successfully!";
@@ -172,7 +177,8 @@ public class ProductController {
      * @param price       New price as string
      * @return String message indicating success or error
      */
-    public String updateProduct(int productId, String productName, Category category, String price) {
+    public String updateProduct(int productId, String productName, Category category, String price,
+            String buyingPrice) {
         // Validate inputs
         if (productName == null || productName.trim().isEmpty()) {
             return "Error: Product name cannot be empty!";
@@ -182,10 +188,12 @@ public class ProductController {
         }
 
         double priceValue;
+        double buyingPriceValue;
         try {
             priceValue = Double.parseDouble(price);
-            if (priceValue < 0) {
-                return "Error: Price cannot be negative!";
+            buyingPriceValue = Double.parseDouble(buyingPrice);
+            if (priceValue < 0 || buyingPriceValue < 0) {
+                return "Error: Prices cannot be negative!";
             }
         } catch (NumberFormatException e) {
             return "Error: Invalid price format!";
@@ -196,14 +204,15 @@ public class ProductController {
             return "Error: Product name already exists!";
         }
 
-        String sql = "UPDATE product SET product_name = ?, category_id = ?, price = ? WHERE product_id = ?";
+        String sql = "UPDATE product SET product_name = ?, category_id = ?, price = ?, buying_price = ? WHERE product_id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, productName.trim());
             pstmt.setInt(2, category.getCategoryId());
             pstmt.setDouble(3, priceValue);
-            pstmt.setInt(4, productId);
+            pstmt.setDouble(4, buyingPriceValue);
+            pstmt.setInt(5, productId);
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
                 return "Success: Product updated successfully!";

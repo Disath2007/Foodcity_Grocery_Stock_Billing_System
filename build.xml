@@ -9,7 +9,7 @@
 <!-- in the project's Project Properties dialog box.-->
 <project name="Foodcity_Grocery_Stock_&amp;_Billing_System" default="default" basedir=".">
     <description>Builds, tests, and runs the project Foodcity Grocery Stock &amp; Billing System.</description>
-    <import file="nbproject/build-impl.xml"/>
+    <import file="nbproject/build-impl.xml" />
     <!--
 
     There exist several targets which are by default empty and which can be 
@@ -70,4 +70,12 @@
     nbproject/build-impl.xml file. 
 
     -->
+
+    <!-- Custom target to copy DateChooser resources after compilation -->
+    <target name="-post-compile">
+        <copy todir="${build.classes.dir}/GUIComponents/DateChooser">
+            <fileset dir="${src.dir}/GUIComponents/DateChooser" includes="*.png" />
+        </copy>
+    </target>
+
 </project>

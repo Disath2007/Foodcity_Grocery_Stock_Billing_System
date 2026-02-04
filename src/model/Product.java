@@ -12,7 +12,8 @@ public class Product {
     private String productName;
     private int categoryId;
     private String categoryName;
-    private double price;
+    private double sellingPrice; // was price
+    private double buyingPrice;
 
     /**
      * Default constructor
@@ -23,29 +24,33 @@ public class Product {
     /**
      * Constructor for creating new products
      * 
-     * @param productName Name of the product
-     * @param categoryId  Category ID
-     * @param price       Price of the product
+     * @param productName  Name of the product
+     * @param categoryId   Category ID
+     * @param sellingPrice Selling Price of the product
+     * @param buyingPrice  Buying Price of the product
      */
-    public Product(String productName, int categoryId, double price) {
+    public Product(String productName, int categoryId, double sellingPrice, double buyingPrice) {
         this.productName = productName;
         this.categoryId = categoryId;
-        this.price = price;
+        this.sellingPrice = sellingPrice;
+        this.buyingPrice = buyingPrice;
     }
 
     /**
      * Constructor with id (for updates)
      * 
-     * @param productId   Product ID
-     * @param productName Name of the product
-     * @param categoryId  Category ID
-     * @param price       Price of the product
+     * @param productId    Product ID
+     * @param productName  Name of the product
+     * @param categoryId   Category ID
+     * @param sellingPrice Selling Price of the product
+     * @param buyingPrice  Buying Price of the product
      */
-    public Product(int productId, String productName, int categoryId, double price) {
+    public Product(int productId, String productName, int categoryId, double sellingPrice, double buyingPrice) {
         this.productId = productId;
         this.productName = productName;
         this.categoryId = categoryId;
-        this.price = price;
+        this.sellingPrice = sellingPrice;
+        this.buyingPrice = buyingPrice;
     }
 
     /**
@@ -55,14 +60,17 @@ public class Product {
      * @param productName  Name of the product
      * @param categoryId   Category ID
      * @param categoryName Category name for display
-     * @param price        Price of the product
+     * @param sellingPrice Selling Price of the product
+     * @param buyingPrice  Buying Price of the product
      */
-    public Product(int productId, String productName, int categoryId, String categoryName, double price) {
+    public Product(int productId, String productName, int categoryId, String categoryName, double sellingPrice,
+            double buyingPrice) {
         this.productId = productId;
         this.productName = productName;
         this.categoryId = categoryId;
         this.categoryName = categoryName;
-        this.price = price;
+        this.sellingPrice = sellingPrice;
+        this.buyingPrice = buyingPrice;
     }
 
     // Getters and Setters
@@ -100,11 +108,19 @@ public class Product {
     }
 
     public double getPrice() {
-        return price;
+        return sellingPrice;
     }
 
     public void setPrice(double price) {
-        this.price = price;
+        this.sellingPrice = price;
+    }
+
+    public double getBuyingPrice() {
+        return buyingPrice;
+    }
+
+    public void setBuyingPrice(double buyingPrice) {
+        this.buyingPrice = buyingPrice;
     }
 
     @Override

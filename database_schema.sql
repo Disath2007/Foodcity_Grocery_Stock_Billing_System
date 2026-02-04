@@ -1,6 +1,6 @@
 -- =========================================
 -- Foodcity Grocery Stock & Billing System
--- Database Schema
+-- Database Schema (Updated for Buying Price & GRN Total)
 -- =========================================
 
 -- Create Database
@@ -17,12 +17,9 @@ CREATE TABLE users (
     username VARCHAR(50) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     full_name VARCHAR(100) NOT NULL,
-
     phone VARCHAR(15),
     role ENUM('Admin', 'Manager', 'Cashier') NOT NULL,
-   
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    
 ) ENGINE=InnoDB;
 
 -- =========================================
@@ -42,7 +39,8 @@ CREATE TABLE product (
     product_id INT AUTO_INCREMENT PRIMARY KEY,
     product_name VARCHAR(150) NOT NULL,
     category_id INT NOT NULL,
-    price DECIMAL(10, 2) NOT NULL,
+    price DECIMAL(10, 2) NOT NULL COMMENT 'Selling Price',
+    buying_price DECIMAL(10, 2) NOT NULL DEFAULT 0.00 COMMENT 'Buying Price',
     FOREIGN KEY (category_id) REFERENCES category(category_id) 
         ON UPDATE CASCADE ON DELETE RESTRICT
 ) ENGINE=InnoDB;
@@ -79,12 +77,29 @@ CREATE TABLE supplier_product (
     sp_id INT AUTO_INCREMENT PRIMARY KEY,
     supplier_id INT NOT NULL,
     product_id INT NOT NULL,
-    buying_price DECIMAL(10, 2) NOT NULL,
     FOREIGN KEY (supplier_id) REFERENCES supplier(supplier_id) 
         ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (product_id) REFERENCES product(product_id) 
         ON UPDATE CASCADE ON DELETE CASCADE,
     UNIQUE KEY unique_supplier_product (supplier_id, product_id)
+) ENGINE=InnoDB;
+
+-- =========================================
+-- Table: grn
+-- Description: Goods Received Note for stock receiving
+-- =========================================
+CREATE TABLE grn (
+    grn_id INT AUTO_INCREMENT PRIMARY KEY,
+    product_id INT NOT NULL,
+    supplier_id INT NOT NULL,
+    ordered_quantity INT NOT NULL,
+    delivered_quantity INT NOT NULL,
+    date_created TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (product_id) REFERENCES product(product_id) 
+        ON UPDATE CASCADE ON DELETE RESTRICT,
+    FOREIGN KEY (supplier_id) REFERENCES supplier(supplier_id) 
+        ON UPDATE CASCADE ON DELETE RESTRICT
+    -- Note: total_price is calculated dynamically in application (buying_price * delivered_quantity)
 ) ENGINE=InnoDB;
 
 -- =========================================
@@ -115,44 +130,44 @@ INSERT INTO category (category_name) VALUES
 ('Personal Care'),
 ('Household Items');
 
--- Sample Products
-INSERT INTO product (product_name, category_id, price) VALUES
-('Fresh Milk 1L', 1, 350.00),
-('Cheddar Cheese 200g', 1, 550.00),
-('Butter 250g', 1, 480.00),
-('Yogurt Cup 150g', 1, 120.00),
-('Coca Cola 1.5L', 2, 350.00),
-('Sprite 500ml', 2, 150.00),
-('Orange Juice 1L', 2, 420.00),
-('Mineral Water 1L', 2, 80.00),
-('White Bread Loaf', 3, 180.00),
-('Croissant', 3, 150.00),
-('Apple 1kg', 4, 650.00),
-('Banana 1kg', 4, 280.00),
-('Orange 1kg', 4, 450.00),
-('Carrot 500g', 5, 180.00),
-('Tomato 500g', 5, 220.00),
-('Onion 1kg', 5, 320.00),
-('Chicken Breast 500g', 6, 850.00),
-('Ground Beef 500g', 6, 1200.00),
-('Salmon Fillet 250g', 7, 1500.00),
-('Shrimp 500g', 7, 1800.00),
-('Frozen Pizza', 8, 750.00),
-('Ice Cream 1L', 8, 680.00),
-('Canned Beans 400g', 9, 180.00),
-('Canned Corn 400g', 9, 150.00),
-('Potato Chips 150g', 10, 280.00),
-('Chocolate Bar 100g', 10, 220.00),
-('Ketchup 500ml', 11, 350.00),
-('Mayonnaise 250g', 11, 420.00),
-('Black Pepper 50g', 12, 180.00),
-('Chili Powder 100g', 12, 150.00),
-('Rice 5kg', 13, 1200.00),
-('Spaghetti 500g', 13, 280.00),
-('Shampoo 250ml', 14, 480.00),
-('Toothpaste 100g', 14, 220.00),
-('Dish Soap 500ml', 15, 320.00),
-('Laundry Detergent 1kg', 15, 650.00);
+-- Sample Products (Including dummy buying price approx 70-80% of selling price)
+INSERT INTO product (product_name, category_id, price, buying_price) VALUES
+('Fresh Milk 1L', 1, 350.00, 280.00),
+('Cheddar Cheese 200g', 1, 550.00, 440.00),
+('Butter 250g', 1, 480.00, 380.00),
+('Yogurt Cup 150g', 1, 120.00, 95.00),
+('Coca Cola 1.5L', 2, 350.00, 280.00),
+('Sprite 500ml', 2, 150.00, 120.00),
+('Orange Juice 1L', 2, 420.00, 330.00),
+('Mineral Water 1L', 2, 80.00, 40.00),
+('White Bread Loaf', 3, 180.00, 140.00),
+('Croissant', 3, 150.00, 100.00),
+('Apple 1kg', 4, 650.00, 500.00),
+('Banana 1kg', 4, 280.00, 200.00),
+('Orange 1kg', 4, 450.00, 350.00),
+('Carrot 500g', 5, 180.00, 130.00),
+('Tomato 500g', 5, 220.00, 160.00),
+('Onion 1kg', 5, 320.00, 250.00),
+('Chicken Breast 500g', 6, 850.00, 680.00),
+('Ground Beef 500g', 6, 1200.00, 950.00),
+('Salmon Fillet 250g', 7, 1500.00, 1200.00),
+('Shrimp 500g', 7, 1800.00, 1400.00),
+('Frozen Pizza', 8, 750.00, 500.00),
+('Ice Cream 1L', 8, 680.00, 540.00),
+('Canned Beans 400g', 9, 180.00, 140.00),
+('Canned Corn 400g', 9, 150.00, 110.00),
+('Potato Chips 150g', 10, 280.00, 210.00),
+('Chocolate Bar 100g', 10, 220.00, 170.00),
+('Ketchup 500ml', 11, 350.00, 280.00),
+('Mayonnaise 250g', 11, 420.00, 330.00),
+('Black Pepper 50g', 12, 180.00, 130.00),
+('Chili Powder 100g', 12, 150.00, 110.00),
+('Rice 5kg', 13, 1200.00, 950.00),
+('Spaghetti 500g', 13, 280.00, 200.00),
+('Shampoo 250ml', 14, 480.00, 350.00),
+('Toothpaste 100g', 14, 220.00, 170.00),
+('Dish Soap 500ml', 15, 320.00, 250.00),
+('Laundry Detergent 1kg', 15, 650.00, 520.00);
 
 INSERT INTO supplier (supplier_name, company_name, phone) VALUES
 ('Nimal Perera', 'Nimal Traders', '0771234567'),
@@ -201,8 +216,49 @@ INSERT INTO stock (product_id, quantity) VALUES
 (33, 100),  -- Shampoo 250ml
 (34, 210),  -- Toothpaste 100g
 (35, 120),  -- Dish Soap 500ml
-(36, 75),   -- Laundry Detergent 1kg
+(36, 75);  -- Laundry Detergent 1kg
 
+-- Sample Supplier-Product Data (Linking Products to Suppliers)
+INSERT INTO supplier_product (supplier_id, product_id) VALUES
+(1, 1),  -- Nimal supplies Fresh Milk
+(1, 2),  -- Nimal supplies Cheese
+(1, 3),  -- Nimal supplies Butter
+(1, 4),  -- Nimal supplies Yogurt
+(2, 5),  -- Kamal supplies Coca Cola
+(2, 6),  -- Kamal supplies Sprite
+(2, 7),  -- Kamal supplies Orange Juice
+(2, 8),  -- Kamal supplies Mineral Water
+(3, 9),  -- Sunil supplies Bread
+(3, 10), -- Sunil supplies Croissant
+(3, 11), -- Sunil supplies Apple
+(3, 12), -- Sunil supplies Banana
+(3, 15), -- Sunil supplies Tomato
+(4, 21), -- Ruwan supplies Frozen Pizza
+(4, 22), -- Ruwan supplies Ice Cream
+(5, 31), -- Ajith supplies Rice
+(5, 32), -- Ajith supplies Spaghetti
+(5, 23), -- Ajith supplies Canned Beans
+(6, 33), -- Saman supplies Shampoo
+(6, 34), -- Saman supplies Toothpaste
+(6, 35), -- Saman supplies Dish Soap
+(6, 36), -- Saman supplies Laundry Detergent
+(7, 17), -- Pradeep supplies Chicken
+(7, 18), -- Pradeep supplies Beef
+(8, 19), -- Tharindu supplies Salmon
+(8, 20); -- Tharindu supplies Shrimp
+
+-- Sample GRN Data
+INSERT INTO grn (product_id, supplier_id, ordered_quantity, delivered_quantity, date_created) VALUES
+(1, 1, 50, 50, '2023-10-01 08:30:00'),   -- Fresh Milk from Nimal
+(5, 2, 100, 100, '2023-10-02 09:45:00'),  -- Coca Cola from Kamal
+(11, 3, 30, 30, '2023-10-03 07:15:00'),   -- Apples from Sunil
+(21, 4, 40, 40, '2023-10-05 14:20:00'),   -- Frozen Pizza from Ruwan
+(31, 5, 25, 25, '2023-10-08 11:00:00'),   -- Rice from Ajith
+(2, 1, 20, 20, '2023-10-10 10:30:00'),    -- Cheese from Nimal
+(15, 3, 60, 50, '2023-10-12 13:45:00'),   -- Tomatoes (Partial delivery)
+(33, 6, 50, 50, '2023-10-15 15:00:00'),   -- Shampoo from Saman
+(36, 6, 40, 40, CURRENT_TIMESTAMP - INTERVAL 3 DAY), -- Detergent
+(17, 7, 20, 20, CURRENT_TIMESTAMP - INTERVAL 1 DAY); -- Chicken
 
 -- =========================================
 -- End of Database Schema
