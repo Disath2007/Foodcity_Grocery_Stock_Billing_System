@@ -20,10 +20,9 @@ Welcome to the official setup guide! My goal is to help you get this project run
 Tell them: "Even if we both use MySQL, your version might be 5.7 and mine might be 8.4, or your settings might be different from mine. By using Docker, I am providing the exact same environment. It ensures that 'It works on my machine' means 'It works on yours too' without any version errors."
 
 2. "Automation & Efficiency" (The 'One Click' Argument)
-"Manually executing SQL commands in Workbench requires me to manually create the database, name it correctly, and set the right characterset. Docker automates the entire infrastructure. With one command (docker compose up), the server is started, the database is created, and the data is imported instantly. It’s faster and reduces human error."
+"Manually executing SQL commands in Workbench requires us to manually create the database, name it correctly, and set the right characterset. Docker automates the entire infrastructure. With one command (docker compose up), the server is started, the database is created, and the data is imported instantly. It’s faster and reduces human error."
 
-3. "Clean Development Environment" (The 'Isolation' Argument)
-Tell them: "Docker keeps the project isolated. If I use a normal local SQL database, it might conflict with other projects or services running on your computer. With Docker, when the lecturer is done marking the project, they can just stop the container, and their computer stays clean. No database 'trash' is left behind."
+3. "Clean Development Environment" (The 'Isolation' Argument) "Docker keeps the project isolated. If I use a normal local SQL database, it might conflict with other projects or services running on your computer. With Docker, when the lecturer is done marking the project, they can just stop the container, and their computer stays clean. No database 'trash' is left behind."
 
 ---
 💡 The "Secret" Technical Detail:
