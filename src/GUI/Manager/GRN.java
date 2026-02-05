@@ -300,6 +300,7 @@ public class GRN extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        dateChooser = new GUIComponents.DateChooser.DateChooser();
         Main_Panel = new javax.swing.JPanel();
         Top_Panel = new javax.swing.JPanel();
         GRN_lbl = new javax.swing.JLabel();
@@ -320,7 +321,7 @@ public class GRN extends javax.swing.JFrame {
         Supplier_lbl = new javax.swing.JLabel();
         Supplier = new javax.swing.JComboBox<>();
         Right_Panel = new javax.swing.JPanel();
-        lbl_date = new javax.swing.JLabel();
+        lbl_3 = new javax.swing.JLabel();
         lbl_6 = new javax.swing.JLabel();
         GRN_Scroll = new javax.swing.JScrollPane();
         GRN_Table = new javax.swing.JTable();
@@ -328,6 +329,10 @@ public class GRN extends javax.swing.JFrame {
         Popup_date = new javax.swing.JButton();
         clear = new javax.swing.JButton();
         Search = new javax.swing.JButton();
+
+        dateChooser.setForeground(new java.awt.Color(73, 128, 37));
+        dateChooser.setDateFormat("\nyyyy-MM-dd");
+        dateChooser.setTextRefernce(Date);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -499,8 +504,8 @@ public class GRN extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(Supplier_lbl)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(Supplier, javax.swing.GroupLayout.DEFAULT_SIZE, 57, Short.MAX_VALUE)
-                .addGap(76, 76, 76)
+                .addComponent(Supplier, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 88, Short.MAX_VALUE)
                 .addGroup(Left_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn_update1, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btn_save1, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -513,8 +518,8 @@ public class GRN extends javax.swing.JFrame {
                 .addGap(37, 37, 37))
         );
 
-        lbl_date.setFont(new java.awt.Font("Unispace", 0, 18)); // NOI18N
-        lbl_date.setText("Date          :");
+        lbl_3.setFont(new java.awt.Font("Unispace", 0, 18)); // NOI18N
+        lbl_3.setText("Date          :");
 
         lbl_6.setFont(new java.awt.Font("Unispace", 0, 18)); // NOI18N
         lbl_6.setText("Loading...");
@@ -556,6 +561,11 @@ public class GRN extends javax.swing.JFrame {
         Date.setFont(new java.awt.Font("Unispace", 0, 12)); // NOI18N
 
         Popup_date.setText("...");
+        Popup_date.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Popup_dateActionPerformed(evt);
+            }
+        });
 
         clear.setFont(new java.awt.Font("Unispace", 0, 12)); // NOI18N
         clear.setText("Clear");
@@ -589,7 +599,7 @@ public class GRN extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(clear))
                     .addGroup(Right_PanelLayout.createSequentialGroup()
-                        .addComponent(lbl_date)
+                        .addComponent(lbl_3)
                         .addGap(26, 26, 26)
                         .addComponent(lbl_6))
                     .addComponent(GRN_Scroll, javax.swing.GroupLayout.PREFERRED_SIZE, 1415, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -600,14 +610,14 @@ public class GRN extends javax.swing.JFrame {
             .addGroup(Right_PanelLayout.createSequentialGroup()
                 .addGap(26, 26, 26)
                 .addGroup(Right_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lbl_date)
+                    .addComponent(lbl_3)
                     .addComponent(lbl_6))
                 .addGap(27, 27, 27)
                 .addComponent(GRN_Scroll, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(37, 37, 37)
                 .addGroup(Right_PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(Date, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(Popup_date, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(Popup_date, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
                     .addComponent(clear, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(Search, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(363, Short.MAX_VALUE))
@@ -713,6 +723,9 @@ public class GRN extends javax.swing.JFrame {
         // TODO add your handling code here:
     }// GEN-LAST:event_SupplierActionPerformed
 
+    private void Popup_dateActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_Popup_dateActionPerformed
+        dateChooser.showPopup();
+    }// GEN-LAST:event_Popup_dateActionPerformed
 
     private void clearActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_clearActionPerformed
         Date.setText("");
@@ -782,9 +795,10 @@ public class GRN extends javax.swing.JFrame {
     private javax.swing.JButton btn_save1;
     private javax.swing.JButton btn_update1;
     private javax.swing.JButton clear;
+    private GUIComponents.DateChooser.DateChooser dateChooser;
     private javax.swing.JLabel item_name_lbl;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lbl_3;
     private javax.swing.JLabel lbl_6;
-    private javax.swing.JLabel lbl_date;
     // End of variables declaration//GEN-END:variables
 }
