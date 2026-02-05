@@ -25,7 +25,7 @@ public class DatabaseConnection {
                     "root",
                     "Disath06@#");
 
-            System.out.println("Success");
+            System.out.println("Success! DB connected.");
             return conn;
 
         } catch (SQLException e) {

@@ -217,7 +217,7 @@ public class LoginFrame extends javax.swing.JFrame {
                         } else if ("Manager".equalsIgnoreCase(role)) {
                                 new ManagerDashboard().setVisible(true);
                         } else {
-                                new CashierDashboard().setVisible(true);
+                                new CashierDashboard(user).setVisible(true);
                         }
                         this.dispose();
                 } else {

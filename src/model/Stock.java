@@ -13,8 +13,8 @@ public class Stock {
     private String productName;
     private String categoryName;
     private int quantity;
+    private double price;
     private String lastUpdated;
-
 
     public Stock() {
     }
@@ -39,12 +39,13 @@ public class Stock {
      * @param categoryName Category name for display
      * @param quantity     Quantity in stock
      */
-    public Stock(int stockId, int productId, String productName, String categoryName, int quantity) {
+    public Stock(int stockId, int productId, String productName, String categoryName, int quantity, double price) {
         this.stockId = stockId;
         this.productId = productId;
         this.productName = productName;
         this.categoryName = categoryName;
         this.quantity = quantity;
+        this.price = price;
     }
 
     /**
@@ -58,12 +59,13 @@ public class Stock {
      * @param lastUpdated  Last update timestamp
      */
     public Stock(int stockId, int productId, String productName, String categoryName, int quantity,
-            String lastUpdated) {
+            double price, String lastUpdated) {
         this.stockId = stockId;
         this.productId = productId;
         this.productName = productName;
         this.categoryName = categoryName;
         this.quantity = quantity;
+        this.price = price;
         this.lastUpdated = lastUpdated;
     }
 
@@ -107,6 +109,14 @@ public class Stock {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
     }
 
     public String getLastUpdated() {
