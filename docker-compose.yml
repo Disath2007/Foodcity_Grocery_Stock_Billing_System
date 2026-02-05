@@ -1,0 +1,18 @@
+version: "3.8"
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: foodcity_mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: VBNM2006
+      MYSQL_DATABASE: foodcity_db
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./database_schema.sql:/docker-entrypoint-initdb.d/database_schema.sql
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
