@@ -3,11 +3,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package GUI.Manager;
+
 // Add these imports at the TOP
 import GUI.LoginFrame;
-import controller.StockController;  // ADD THIS LINE
-import model.Stock;                 // ADD THIS LINE
-import java.util.List;     
+import GUI.SalesHistoryFrame;
+import controller.StockController; // ADD THIS LINE
+import model.Stock; // ADD THIS LINE
+import java.util.List;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -22,35 +24,36 @@ import javax.swing.*;
  * @author Disath Damsutha
  */
 public class ManagerDashboard extends javax.swing.JFrame {
-    
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(ManagerDashboard.class.getName());
-    private ChartPanel chartPanel; 
-    
+
+    private static final java.util.logging.Logger logger = java.util.logging.Logger
+            .getLogger(ManagerDashboard.class.getName());
+    private ChartPanel chartPanel;
+
     private StockController stockController;
     private javax.swing.Timer refreshTimer;
     private static final int REFRESH_INTERVAL = 10000;
+
     /**
      * Creates new form AdminDashboard
      */
     public ManagerDashboard() {
-        stockController = new StockController();  
+        stockController = new StockController();
         initComponents();
         setLocationRelativeTo(null);
-        createChart();  
+        createChart();
         this.setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
-        loadLowStockAlerts(); 
-        startAutoRefresh();  
+        loadLowStockAlerts();
+        startAutoRefresh();
 
     }
-    
-    
-     // ======== ADD THIS METHOD RIGHT HERE ========
+
+    // ======== ADD THIS METHOD RIGHT HERE ========
     // Dummy Chart
     private void createChart() {
         try {
             // Create dataset with sample data
             DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-            
+
             // Sample data - Replace with your actual data later
             dataset.addValue(12000, "Sales", "Jan");
             dataset.addValue(15000, "Sales", "Feb");
@@ -58,124 +61,126 @@ public class ManagerDashboard extends javax.swing.JFrame {
             dataset.addValue(21000, "Sales", "Apr");
             dataset.addValue(19000, "Sales", "May");
             dataset.addValue(23000, "Sales", "Jun");
-            
+
             // Create chart
             JFreeChart chart = ChartFactory.createBarChart(
-                    "Monthly Sales Overview",  // Chart title
-                    "Month",                   // X-axis label
-                    "Sales ($)",               // Y-axis label
-                    dataset,                   // Data
-                    PlotOrientation.VERTICAL,  // Orientation
-                    true,                      // Include legend
-                    true,                      // Tooltips
-                    false                      // URLs
+                    "Monthly Sales Overview", // Chart title
+                    "Month", // X-axis label
+                    "Sales ($)", // Y-axis label
+                    dataset, // Data
+                    PlotOrientation.VERTICAL, // Orientation
+                    true, // Include legend
+                    true, // Tooltips
+                    false // URLs
             );
-            
+
             // Customize chart appearance
             chart.setBackgroundPaint(Color.WHITE);
             CategoryPlot plot = (CategoryPlot) chart.getPlot();
-            plot.setBackgroundPaint(new Color(243, 247, 244));  // Match your background
+            plot.setBackgroundPaint(new Color(243, 247, 244)); // Match your background
             plot.setRangeGridlinePaint(Color.GRAY);
-            
+
             // Create chart panel
             chartPanel = new ChartPanel(chart);
             chartPanel.setPreferredSize(new Dimension(380, 370));
             chartPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-            
+
             // IMPORTANT: Change to jpanelchart (your panel name)
             jpanelchart.removeAll(); // Clear existing content
             jpanelchart.setLayout(new BorderLayout());
             jpanelchart.add(chartPanel, BorderLayout.CENTER);
             jpanelchart.revalidate();
             jpanelchart.repaint();
-            
+
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Error creating chart: " + e.getMessage());
         }
     }
-    
-    
-    /**
- * Loads and displays low stock items
- */
-private void loadLowStockAlerts() {
-    int LOW_STOCK_THRESHOLD = 50;
-    
-    try {
-        List<Stock> lowStockList = stockController.getLowStockItems(LOW_STOCK_THRESHOLD);
-        
-        txt_lowStockArea.setText("");  // Change to YOUR text area component name
-        
-        if (lowStockList.isEmpty()) {
-            txt_lowStockArea.setText("\n  All stock levels are good!\n\n" +
-                                     "  No items below " + LOW_STOCK_THRESHOLD + " units.");
-        } else {
-            StringBuilder alertText = new StringBuilder();
-            alertText.append(" Items Running Low\n");
-            alertText.append(" ════════════════════════\n\n");
-            
-            for (Stock stock : lowStockList) {
-                String urgency = getUrgencyLevel(stock.getQuantity());
-                alertText.append(String.format(" %s %s\n", urgency, stock.getProductName()));
-                alertText.append(String.format("    Qty: %d | %s\n", 
-                    stock.getQuantity(), stock.getCategoryName()));
-                alertText.append("    ─────────────────\n");
-            }
-            
-            alertText.append("\n");
-            alertText.append(String.format(" Total: %d items need attention", lowStockList.size()));
-            
-            txt_lowStockArea.setText(alertText.toString());
-            txt_lowStockArea.setCaretPosition(0);
-        }
-    } catch (Exception e) {
-        txt_lowStockArea.setText("\n  Error loading stock alerts:\n  " + e.getMessage());
-        e.printStackTrace();
-    }
-}
-private String getUrgencyLevel(int quantity) {
-    if (quantity < 20) {
-        return "[CRITICAL]";  
-    } else if (quantity < 40) {
-        return "[WARNING] ";  
-    } else {
-        return "[LOW]     ";  
-    }
-}
-/**
- * Starts auto-refresh timer
- */
-private void startAutoRefresh() {
-    refreshTimer = new javax.swing.Timer(REFRESH_INTERVAL, (e) -> {
-        loadLowStockAlerts();
-        System.out.println("Low stock alerts refreshed at: " + 
-            java.time.LocalTime.now());
-    });
-    refreshTimer.setRepeats(true);
-    refreshTimer.start();
-    System.out.println("Auto-refresh started. Refreshing every " + 
-        (REFRESH_INTERVAL / 1000) + " seconds");
-}
-/**
- * Stops auto-refresh timer
- */
-private void stopAutoRefresh() {
-    if (refreshTimer != null && refreshTimer.isRunning()) {
-        refreshTimer.stop();
-        System.out.println("Auto-refresh stopped");
-    }
-}
-/**
- * Clean up when window closes
- */
-@Override
-public void dispose() {
-    stopAutoRefresh();
-    super.dispose();
-}
-    // ======== END OF ADDED METHOD ========
 
+    /**
+     * Loads and displays low stock items
+     */
+    private void loadLowStockAlerts() {
+        int LOW_STOCK_THRESHOLD = 50;
+
+        try {
+            List<Stock> lowStockList = stockController.getLowStockItems(LOW_STOCK_THRESHOLD);
+
+            txt_lowStockArea.setText(""); // Change to YOUR text area component name
+
+            if (lowStockList.isEmpty()) {
+                txt_lowStockArea.setText("\n  All stock levels are good!\n\n" +
+                        "  No items below " + LOW_STOCK_THRESHOLD + " units.");
+            } else {
+                StringBuilder alertText = new StringBuilder();
+                alertText.append(" Items Running Low\n");
+                alertText.append(" ════════════════════════\n\n");
+
+                for (Stock stock : lowStockList) {
+                    String urgency = getUrgencyLevel(stock.getQuantity());
+                    alertText.append(String.format(" %s %s\n", urgency, stock.getProductName()));
+                    alertText.append(String.format("    Qty: %d | %s\n",
+                            stock.getQuantity(), stock.getCategoryName()));
+                    alertText.append("    ─────────────────\n");
+                }
+
+                alertText.append("\n");
+                alertText.append(String.format(" Total: %d items need attention", lowStockList.size()));
+
+                txt_lowStockArea.setText(alertText.toString());
+                txt_lowStockArea.setCaretPosition(0);
+            }
+        } catch (Exception e) {
+            txt_lowStockArea.setText("\n  Error loading stock alerts:\n  " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private String getUrgencyLevel(int quantity) {
+        if (quantity < 20) {
+            return "[CRITICAL]";
+        } else if (quantity < 40) {
+            return "[WARNING] ";
+        } else {
+            return "[LOW]     ";
+        }
+    }
+
+    /**
+     * Starts auto-refresh timer
+     */
+    private void startAutoRefresh() {
+        refreshTimer = new javax.swing.Timer(REFRESH_INTERVAL, (e) -> {
+            loadLowStockAlerts();
+            System.out.println("Low stock alerts refreshed at: " +
+                    java.time.LocalTime.now());
+        });
+        refreshTimer.setRepeats(true);
+        refreshTimer.start();
+        System.out.println("Auto-refresh started. Refreshing every " +
+                (REFRESH_INTERVAL / 1000) + " seconds");
+    }
+
+    /**
+     * Stops auto-refresh timer
+     */
+    private void stopAutoRefresh() {
+        if (refreshTimer != null && refreshTimer.isRunning()) {
+            refreshTimer.stop();
+            System.out.println("Auto-refresh stopped");
+        }
+    }
+
+    /**
+     * Clean up when window closes
+     */
+    @Override
+    public void dispose() {
+        stopAutoRefresh();
+        super.dispose();
+    }
+    // ======== END OF ADDED METHOD ========
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -183,9 +188,10 @@ public void dispose() {
      * regenerated by the Form Editor.
      */
     @SuppressWarnings("unchecked")
-    
-// <editor-fold defaultstate="collapsed" desc="Generated Code">                          
 
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">
+
+    // <editor-fold defaultstate="collapsed" desc="Generated
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -541,50 +547,51 @@ public void dispose() {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    
-    
-    
-    private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
-       
-    new LoginFrame().setVisible(true);
-    this.dispose();
-        
-    }//GEN-LAST:event_btnLogoutActionPerformed
+    private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnLogoutActionPerformed
 
-    private void btnStockmanagementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStockmanagementActionPerformed
-    new StockManagement().setVisible(true);
-    this.dispose();
-    
-    }//GEN-LAST:event_btnStockmanagementActionPerformed
+        new LoginFrame().setVisible(true);
+        this.dispose();
 
-    private void btnproductmanagementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnproductmanagementActionPerformed
-    new ProductManagement().setVisible(true);
-    this.dispose();
-    }//GEN-LAST:event_btnproductmanagementActionPerformed
+    }// GEN-LAST:event_btnLogoutActionPerformed
 
-    private void btnReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReportActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnReportActionPerformed
+    private void btnStockmanagementActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnStockmanagementActionPerformed
+        new StockManagement().setVisible(true);
+        this.dispose();
 
-    private void btnSuppliermanagementActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSuppliermanagementActionPerformed
-            new SupplierManagement().setVisible(true);
-    this.dispose();
-    }//GEN-LAST:event_btnSuppliermanagementActionPerformed
+    }// GEN-LAST:event_btnStockmanagementActionPerformed
 
-    private void GRNbtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GRNbtn1ActionPerformed
-                  new GRN().setVisible(true);
-    this.dispose();  // TODO add your handling code here:
-    }//GEN-LAST:event_GRNbtn1ActionPerformed
+    private void btnproductmanagementActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnproductmanagementActionPerformed
+        new ProductManagement().setVisible(true);
+        this.dispose();
+    }// GEN-LAST:event_btnproductmanagementActionPerformed
+
+    private void btnReportActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnReportActionPerformed
+        new SalesHistoryFrame().setVisible(true);
+    }// GEN-LAST:event_btnReportActionPerformed
+
+    private void btnSuppliermanagementActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btnSuppliermanagementActionPerformed
+        new SupplierManagement().setVisible(true);
+        this.dispose();
+    }// GEN-LAST:event_btnSuppliermanagementActionPerformed
+
+    private void GRNbtn1ActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_GRNbtn1ActionPerformed
+        new GRN().setVisible(true);
+        this.dispose(); // TODO add your handling code here:
+    }// GEN-LAST:event_GRNbtn1ActionPerformed
 
     /**
      * @param args the command line arguments
      */
 
-        public static void main(String args[]) {
+    public static void main(String args[]) {
         /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+        // <editor-fold defaultstate="collapsed" desc=" Look and feel setting code
+        // (optional) ">
+        /*
+         * If Nimbus (introduced in Java SE 6) is not available, stay with the default
+         * look and feel.
+         * For details see
+         * http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -596,14 +603,12 @@ public void dispose() {
         } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
             logger.log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
+        // </editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(() -> new ManagerDashboard().setVisible(true));
     }
-    
- 
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton GRNbtn1;
     private javax.swing.JPanel MonthlyProfit;

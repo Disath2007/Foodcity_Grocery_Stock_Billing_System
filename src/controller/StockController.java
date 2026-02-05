@@ -9,7 +9,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class StockController {
 
     /**
@@ -19,7 +18,8 @@ public class StockController {
      */
     public List<Stock> getAllStock() {
         List<Stock> stockList = new ArrayList<>();
-        String sql = "SELECT s.stock_id, s.product_id, p.product_name, c.category_name, s.quantity, s.last_updated " +
+        String sql = "SELECT s.stock_id, s.product_id, p.product_name, c.category_name, s.quantity, p.price, s.last_updated "
+                +
                 "FROM stock s " +
                 "INNER JOIN product p ON s.product_id = p.product_id " +
                 "INNER JOIN category c ON p.category_id = c.category_id " +
@@ -36,6 +36,7 @@ public class StockController {
                         rs.getString("product_name"),
                         rs.getString("category_name"),
                         rs.getInt("quantity"),
+                        rs.getDouble("price"),
                         rs.getString("last_updated"));
                 stockList.add(stock);
             }
@@ -53,7 +54,8 @@ public class StockController {
      */
     public List<Stock> searchStock(String searchTerm) {
         List<Stock> stockList = new ArrayList<>();
-        String sql = "SELECT s.stock_id, s.product_id, p.product_name, c.category_name, s.quantity, s.last_updated " +
+        String sql = "SELECT s.stock_id, s.product_id, p.product_name, c.category_name, s.quantity, p.price, s.last_updated "
+                +
                 "FROM stock s " +
                 "INNER JOIN product p ON s.product_id = p.product_id " +
                 "INNER JOIN category c ON p.category_id = c.category_id " +
@@ -73,6 +75,7 @@ public class StockController {
                         rs.getString("product_name"),
                         rs.getString("category_name"),
                         rs.getInt("quantity"),
+                        rs.getDouble("price"),
                         rs.getString("last_updated"));
                 stockList.add(stock);
             }
@@ -151,36 +154,36 @@ public class StockController {
     }
 
     public List<Stock> getLowStockItems(int threshold) {
-    List<Stock> lowStockList = new ArrayList<>();
-    String sql = "SELECT s.stock_id, s.product_id, p.product_name, " +
-                 "c.category_name, s.quantity, s.last_updated " +
-                 "FROM stock s " +
-                 "INNER JOIN product p ON s.product_id = p.product_id " +
-                 "INNER JOIN category c ON p.category_id = c.category_id " +
-                 "WHERE s.quantity < ? " +
-                 "ORDER BY s.quantity ASC";  
-    
-    try (Connection conn = DatabaseConnection.getConnection();
-         PreparedStatement pstmt = conn.prepareStatement(sql)) {
-        
-        pstmt.setInt(1, threshold);  // Set the threshold value
-        ResultSet rs = pstmt.executeQuery();
-        
-        while (rs.next()) {
-            Stock stock = new Stock(
-                rs.getInt("stock_id"),
-                rs.getInt("product_id"),
-                rs.getString("product_name"),
-                rs.getString("category_name"),
-                rs.getInt("quantity"),
-                rs.getString("last_updated")
-            );
-            lowStockList.add(stock);
+        List<Stock> lowStockList = new ArrayList<>();
+        String sql = "SELECT s.stock_id, s.product_id, p.product_name, " +
+                "c.category_name, s.quantity, p.price, s.last_updated " +
+                "FROM stock s " +
+                "INNER JOIN product p ON s.product_id = p.product_id " +
+                "INNER JOIN category c ON p.category_id = c.category_id " +
+                "WHERE s.quantity < ? " +
+                "ORDER BY s.quantity ASC";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, threshold); // Set the threshold value
+            ResultSet rs = pstmt.executeQuery();
+
+            while (rs.next()) {
+                Stock stock = new Stock(
+                        rs.getInt("stock_id"),
+                        rs.getInt("product_id"),
+                        rs.getString("product_name"),
+                        rs.getString("category_name"),
+                        rs.getInt("quantity"),
+                        rs.getDouble("price"),
+                        rs.getString("last_updated"));
+                lowStockList.add(stock);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
+        return lowStockList;
     }
-    return lowStockList;
-}
 
 }

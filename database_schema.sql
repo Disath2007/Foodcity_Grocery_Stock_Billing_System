@@ -99,7 +99,36 @@ CREATE TABLE grn (
         ON UPDATE CASCADE ON DELETE RESTRICT,
     FOREIGN KEY (supplier_id) REFERENCES supplier(supplier_id) 
         ON UPDATE CASCADE ON DELETE RESTRICT
-    -- Note: total_price is calculated dynamically in application (buying_price * delivered_quantity)
+);
+
+-- =========================================
+-- Table: sales
+-- Description: Transaction summaries
+-- =========================================
+CREATE TABLE sales (
+    sale_id INT AUTO_INCREMENT PRIMARY KEY,
+    cashier_name VARCHAR(100) NOT NULL,
+    subtotal DECIMAL(10, 2) NOT NULL,
+    discount DECIMAL(10, 2) NOT NULL,
+    grand_total DECIMAL(10, 2) NOT NULL,
+    cash_received DECIMAL(10, 2) NOT NULL,
+    balance DECIMAL(10, 2) NOT NULL,
+    sale_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+-- =========================================
+-- Table: sales_items
+-- Description: Individual items for each sale
+-- =========================================
+CREATE TABLE sales_items (
+    item_id INT AUTO_INCREMENT PRIMARY KEY,
+    sale_id INT NOT NULL,
+    product_id INT NOT NULL,
+    quantity INT NOT NULL,
+    unit_price DECIMAL(10, 2) NOT NULL,
+    total_price DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (sale_id) REFERENCES sales(sale_id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES product(product_id)
 ) ENGINE=InnoDB;
 
 -- =========================================
