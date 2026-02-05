@@ -140,12 +140,11 @@
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="btn_delete1" min="-2" pref="156" max="-2" attributes="0"/>
                               <EmptySpace min="54" pref="54" max="-2" attributes="0"/>
-                              <Component id="btn_clear1" min="-2" pref="156" max="-2" attributes="0"/>
+                              <Component id="btn_clear" min="-2" pref="156" max="-2" attributes="0"/>
                           </Group>
                           <Component id="item_name_lbl" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="Item_Search" alignment="0" pref="369" max="32767" attributes="0"/>
                           <Component id="btn_back" alignment="0" min="-2" pref="156" max="-2" attributes="0"/>
-                          <Component id="jScrollPane1" alignment="0" pref="0" max="32767" attributes="0"/>
                           <Component id="Ordered_Qty_lbl" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="Supplier" alignment="0" max="32767" attributes="0"/>
                       </Group>
@@ -161,8 +160,6 @@
                       <EmptySpace min="7" pref="7" max="-2" attributes="0"/>
                       <Component id="Item_Search" min="-2" pref="36" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jScrollPane1" min="-2" pref="189" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
                       <Component id="Ordered_Qty_lbl" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="7" pref="7" max="-2" attributes="0"/>
                       <Component id="Ordered_Qty" min="-2" pref="36" max="-2" attributes="0"/>
@@ -174,7 +171,7 @@
                       <Component id="Supplier_lbl" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="Supplier" min="-2" pref="45" max="-2" attributes="0"/>
-                      <EmptySpace pref="88" max="32767" attributes="0"/>
+                      <EmptySpace pref="283" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="btn_update1" alignment="3" min="-2" pref="58" max="-2" attributes="0"/>
                           <Component id="btn_save1" alignment="3" min="-2" pref="58" max="-2" attributes="0"/>
@@ -182,7 +179,7 @@
                       <EmptySpace min="22" pref="22" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="btn_delete1" alignment="0" min="-2" pref="58" max="-2" attributes="0"/>
-                          <Component id="btn_clear1" alignment="0" min="-2" pref="58" max="-2" attributes="0"/>
+                          <Component id="btn_clear" alignment="0" min="-2" pref="58" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" pref="128" max="-2" attributes="0"/>
                       <Component id="btn_back" min="-2" pref="58" max="-2" attributes="0"/>
@@ -201,7 +198,7 @@
                 <Property name="text" type="java.lang.String" value="Item Name   :"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JButton" name="btn_clear1">
+            <Component class="javax.swing.JButton" name="btn_clear">
               <Properties>
                 <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="99" green="99" red="99" type="rgb"/>
@@ -212,7 +209,7 @@
                 <Property name="text" type="java.lang.String" value="Clear"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_clear1ActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_clearActionPerformed"/>
               </Events>
             </Component>
             <Component class="javax.swing.JButton" name="btn_save1">
@@ -263,6 +260,9 @@
                   <Font name="Unispace" size="12" style="0"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="Item_SearchKeyReleased"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="btn_back">
               <Properties>
@@ -278,40 +278,6 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btn_backActionPerformed"/>
               </Events>
             </Component>
-            <Container class="javax.swing.JScrollPane" name="jScrollPane1">
-              <AuxValues>
-                <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
-              </AuxValues>
-
-              <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
-              <SubComponents>
-                <Component class="javax.swing.JTable" name="Searched_item">
-                  <Properties>
-                    <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                      <Table columnCount="1" rowCount="0">
-                        <Column editable="false" title="Items" type="java.lang.Object"/>
-                      </Table>
-                    </Property>
-                    <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
-                      <TableColumnModel selectionModel="0">
-                        <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="false">
-                          <Title/>
-                          <Editor/>
-                          <Renderer/>
-                        </Column>
-                      </TableColumnModel>
-                    </Property>
-                    <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
-                      <Color id="Hand Cursor"/>
-                    </Property>
-                    <Property name="name" type="java.lang.String" value="" noResource="true"/>
-                    <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
-                      <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
-                    </Property>
-                  </Properties>
-                </Component>
-              </SubComponents>
-            </Container>
             <Component class="javax.swing.JTextField" name="Ordered_Qty">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
@@ -508,6 +474,9 @@
                       <TableHeader reorderingAllowed="true" resizingAllowed="true"/>
                     </Property>
                   </Properties>
+                  <Events>
+                    <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="GRN_TableMouseClicked"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>
