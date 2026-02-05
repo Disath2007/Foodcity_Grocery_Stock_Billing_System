@@ -4,6 +4,45 @@ Welcome to the official setup guide! My goal is to help you get this project run
 
 ---
 
+## Why we used Docker? Why not SQL manually? This is relatable of DevOps and Reliable Software Engineering.
+
+---
+
+![WhaleDockerGIF](https://github.com/user-attachments/assets/aadb0432-3c9c-4932-9038-7a0ba0f00f1c)
+
+
+
+---
+
+## ⚙️ Here are the 3 Professional Reasons:
+
+1. "Environment Consistency" (The 'No Errors' Argument)
+Tell them: "Even if we both use MySQL, your version might be 5.7 and mine might be 8.4, or your settings might be different from mine. By using Docker, I am providing the exact same environment. It ensures that 'It works on my machine' means 'It works on yours too' without any version errors."
+
+2. "Automation & Efficiency" (The 'One Click' Argument)
+Tell them: "Manually executing SQL commands in Workbench requires me to manually create the database, name it correctly, and set the right characterset. Docker automates the entire infrastructure. With one command (docker compose up), the server is started, the database is created, and the data is imported instantly. It’s faster and reduces human error."
+
+3. "Clean Development Environment" (The 'Isolation' Argument)
+Tell them: "Docker keeps the project isolated. If I use a normal local SQL database, it might conflict with other projects or services running on your computer. With Docker, when the lecturer is done marking the project, they can just stop the container, and their computer stays clean. No database 'trash' is left behind."
+
+---
+💡 The "Secret" Technical Detail:
+---
+
+If they press you and say "But isn't it just running the same SQL script?"
+
+You say:
+
+"Exactly! But Docker is the engine that makes sure that script runs in a perfectly configured environment with the correct username, password, and port (3306) every single time, without me having to tell the user what those settings are."
+
+Think of it like this:
+
+SQL Scripts are the "Food Recipes."
+Workbench is "Doing the cooking manually."
+Docker is the "Instant Chef" that comes with its own kitchen, ingredients, and stove to make sure the dish is served perfectly without you lifting a finger. 👨‍🍳
+
+---
+
 ## 🛠 Prerequisites (One-time Setup)
 
 Before we start, you need to have a few tools installed:
