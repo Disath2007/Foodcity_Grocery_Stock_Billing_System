@@ -229,7 +229,7 @@
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="Qty1" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
-                                  <Component id="jSpinner1" min="-2" pref="149" max="-2" attributes="0"/>
+                                  <Component id="qty" min="-2" pref="149" max="-2" attributes="0"/>
                                   <EmptySpace max="32767" attributes="0"/>
                                   <Component id="Remove" min="-2" pref="207" max="-2" attributes="0"/>
                               </Group>
@@ -248,7 +248,7 @@
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="Qty" alignment="3" min="-2" pref="36" max="-2" attributes="0"/>
                               <Component id="Qty1" alignment="3" min="-2" pref="36" max="-2" attributes="0"/>
-                              <Component id="jSpinner1" alignment="3" min="-2" pref="36" max="-2" attributes="0"/>
+                              <Component id="qty" alignment="3" min="-2" pref="36" max="-2" attributes="0"/>
                               <Component id="Remove" alignment="3" min="-2" pref="46" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace pref="43" max="32767" attributes="0"/>
@@ -372,7 +372,7 @@
                                   <Component id="Total_V" alignment="0" max="32767" attributes="0"/>
                                   <Component id="Discount_V" alignment="0" max="32767" attributes="0"/>
                                   <Component id="Grand_Total_V" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="lbl_balance" max="32767" attributes="0"/>
+                                  <Component id="lbl_balance" alignment="1" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace max="32767" attributes="0"/>
                           </Group>
@@ -408,16 +408,13 @@
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" attributes="0">
-                                      <Group type="103" groupAlignment="3" attributes="0">
-                                          <Component id="Grand_Total_lbl" alignment="3" min="-2" pref="36" max="-2" attributes="0"/>
-                                          <Component id="colon_6" alignment="3" min="-2" pref="36" max="-2" attributes="0"/>
-                                      </Group>
-                                      <EmptySpace min="0" pref="9" max="32767" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="Grand_Total_lbl" alignment="3" min="-2" pref="36" max="-2" attributes="0"/>
+                                      <Component id="colon_6" alignment="3" min="-2" pref="36" max="-2" attributes="0"/>
                                   </Group>
-                                  <Component id="lbl_balance" max="32767" attributes="0"/>
+                                  <Component id="lbl_balance" min="-2" pref="36" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace pref="15" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                     </DimensionLayout>
@@ -517,7 +514,6 @@
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Unispace" size="18" style="0"/>
                         </Property>
-                        <Property name="horizontalAlignment" type="int" value="0"/>
                       </Properties>
                     </Component>
                     <Component class="javax.swing.JLabel" name="Discount_V">
@@ -565,14 +561,19 @@
                         <Property name="text" type="java.lang.String" value="Grand Total"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JLabel" name="lbl_balance">
-                    </Component>
                     <Component class="javax.swing.JLabel" name="colon_6">
                       <Properties>
                         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                           <Font name="Unispace" size="18" style="0"/>
                         </Property>
                         <Property name="text" type="java.lang.String" value=":"/>
+                      </Properties>
+                    </Component>
+                    <Component class="javax.swing.JLabel" name="lbl_balance">
+                      <Properties>
+                        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                          <Font name="Unispace" size="18" style="0"/>
+                        </Property>
                       </Properties>
                     </Component>
                   </SubComponents>
@@ -795,7 +796,7 @@
                     <Property name="text" type="java.lang.String" value=":"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JSpinner" name="jSpinner1">
+                <Component class="javax.swing.JSpinner" name="qty">
                 </Component>
                 <Component class="javax.swing.JButton" name="Remove">
                   <Properties>

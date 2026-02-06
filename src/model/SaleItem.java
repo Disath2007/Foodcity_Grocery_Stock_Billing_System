@@ -4,6 +4,8 @@ public class SaleItem {
     private int itemId;
     private int saleId;
     private int productId;
+
+    private String productName;
     private int quantity;
     private double unitPrice;
     private double totalPrice;
@@ -11,13 +13,20 @@ public class SaleItem {
     public SaleItem() {
     }
 
-    public SaleItem(int itemId, int saleId, int productId, int quantity, double unitPrice, double totalPrice) {
+    public SaleItem(int itemId, int saleId, int productId, String productName, int quantity, double unitPrice,
+            double totalPrice) {
         this.itemId = itemId;
         this.saleId = saleId;
         this.productId = productId;
+        this.productName = productName;
         this.quantity = quantity;
         this.unitPrice = unitPrice;
         this.totalPrice = totalPrice;
+    }
+
+    // Constructor for backward compatibility if needed, or update callers
+    public SaleItem(int itemId, int saleId, int productId, int quantity, double unitPrice, double totalPrice) {
+        this(itemId, saleId, productId, "", quantity, unitPrice, totalPrice);
     }
 
     // Getters and Setters
@@ -43,6 +52,14 @@ public class SaleItem {
 
     public void setProductId(int productId) {
         this.productId = productId;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
     }
 
     public int getQuantity() {

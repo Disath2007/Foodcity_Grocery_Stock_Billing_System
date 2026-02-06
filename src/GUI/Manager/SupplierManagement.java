@@ -1,10 +1,9 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+ * Supplier Management System
+ * This class handles the information of companies and individuals that supply stock.
  */
 package GUI.Manager;
 
-// MVC Imports - Using Controller instead of direct database access
 import controller.SupplierController;
 import model.Supplier;
 import java.util.List;
@@ -12,35 +11,23 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
- * VIEW LAYER - Supplier Management Screen
- * 
- * This View uses SupplierController for all operations.
- * No direct database access - follows MVC pattern.
- *
- * @author Disath Damsutha
+ * Screen for managing supplier contacts and information.
+ * Follows the MVC pattern by using SupplierController.
  */
 public class SupplierManagement extends javax.swing.JFrame {
 
-        private static final java.util.logging.Logger logger = java.util.logging.Logger
-                        .getLogger(SupplierManagement.class.getName());
-
-        // MVC Controller - handles all business logic and database operations
         private SupplierController controller;
-
-        // Variable to store selected supplier ID for update/delete operations
-        private int selectedSupplierId = -1;
+        private int selectedSupplierId = -1; // Stores the ID of the supplier selected in the table
 
         public SupplierManagement() {
                 initComponents();
-                controller = new SupplierController(); // Initialize MVC controller
+                controller = new SupplierController();
                 btn_viewdetail.setEnabled(false);
                 this.setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
-                loadSupplierData();
+                loadSupplierData(); // Display current suppliers on startup
         }
 
         @SuppressWarnings("unchecked")
-        // <editor-fold defaultstate="collapsed" desc="Generated
-        // <editor-fold defaultstate="collapsed" desc="Generated
         // <editor-fold defaultstate="collapsed" desc="Generated
         // Code">//GEN-BEGIN:initComponents
         private void initComponents() {
@@ -261,7 +248,7 @@ public class SupplierManagement extends javax.swing.JFrame {
 
                 lbl_6.setFont(new java.awt.Font("Unispace", 0, 18)); // NOI18N
                 lbl_6.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-                lbl_6.setText("Complany Name   :");
+                lbl_6.setText("Company Name   :");
 
                 txt_phone.setFont(new java.awt.Font("Unispace", 0, 12)); // NOI18N
 
@@ -404,8 +391,7 @@ public class SupplierManagement extends javax.swing.JFrame {
                                                                                 javax.swing.GroupLayout.PREFERRED_SIZE)
                                                                 .addPreferredGap(
                                                                                 javax.swing.LayoutStyle.ComponentPlacement.RELATED,
-                                                                                244,
-                                                                                Short.MAX_VALUE)
+                                                                                244, Short.MAX_VALUE)
                                                                 .addComponent(btn_back,
                                                                                 javax.swing.GroupLayout.PREFERRED_SIZE,
                                                                                 58,
@@ -465,124 +451,120 @@ public class SupplierManagement extends javax.swing.JFrame {
                 setLocationRelativeTo(null);
         }// </editor-fold>//GEN-END:initComponents
 
-        private void btn_viewdetailActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btn_viewdetailActionPerformed
+        private void btn_viewdetailActionPerformed(java.awt.event.ActionEvent evt) {
                 if (selectedSupplierId != -1) {
                         new Supplier_Product(selectedSupplierId).setVisible(true);
                         this.dispose();
                 } else {
-                        JOptionPane.showMessageDialog(this, "Please select a supplier first!",
-                                        "Selection Error", JOptionPane.WARNING_MESSAGE);
+                        JOptionPane.showMessageDialog(this, "Please select a supplier first!", "Selection Error",
+                                        JOptionPane.WARNING_MESSAGE);
                 }
-        }// GEN-LAST:event_btn_viewdetailActionPerformed
+        }
 
-        private void txt_searchKeyReleased(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_txt_searchKeyReleased
+        private void txt_searchKeyReleased(java.awt.event.KeyEvent evt) {
                 searchSupplier();
-        }// GEN-LAST:event_txt_searchKeyReleased
+        }
 
-        private void btn_GRNActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btn_GRNActionPerformed
+        private void btn_GRNActionPerformed(java.awt.event.ActionEvent evt) {
                 new GRN().setVisible(true);
                 this.dispose();
-        }// GEN-LAST:event_btn_GRNActionPerformed
+        }
 
-        private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_jTable1MouseClicked
+        private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {
                 int selectedRow = jTable1.getSelectedRow();
                 if (selectedRow >= 0) {
+                        // Fill fields with data from selected row
                         selectedSupplierId = Integer.parseInt(jTable1.getValueAt(selectedRow, 0).toString());
                         String supplierName = jTable1.getValueAt(selectedRow, 1).toString();
                         String companyName = jTable1.getValueAt(selectedRow, 2).toString();
                         String phone = jTable1.getValueAt(selectedRow, 3).toString();
+
                         txt_suppliername.setText(supplierName);
                         txt_companyname.setText(companyName);
                         txt_phone.setText(phone);
                         btn_viewdetail.setEnabled(true);
                 }
-        }// GEN-LAST:event_jTable1MouseClicked
+        }
 
-        private void btn_clearActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btn_clearActionPerformed
+        private void btn_clearActionPerformed(java.awt.event.ActionEvent evt) {
                 clearFields();
-        }// GEN-LAST:event_btn_clearActionPerformed
+        }
 
-        private void btn_saveActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btn_saveActionPerformed
+        private void btn_saveActionPerformed(java.awt.event.ActionEvent evt) {
                 addSupplier();
-        }// GEN-LAST:event_btn_saveActionPerformed
+        }
 
-        private void btn_updateActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btn_updateActionPerformed
+        private void btn_updateActionPerformed(java.awt.event.ActionEvent evt) {
                 updateSupplier();
-        }// GEN-LAST:event_btn_updateActionPerformed
+        }
 
-        private void btn_deleteActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btn_deleteActionPerformed
+        private void btn_deleteActionPerformed(java.awt.event.ActionEvent evt) {
                 deleteSupplier();
-        }// GEN-LAST:event_btn_deleteActionPerformed
+        }
 
-        private void btn_backActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btn_backActionPerformed
+        private void btn_backActionPerformed(java.awt.event.ActionEvent evt) {
                 new ManagerDashboard().setVisible(true);
                 this.dispose();
-        }// GEN-LAST:event_btn_backActionPerformed
+        }
 
-        private void btn_ProductActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btn_CategoryActionPerformed
+        private void btn_ProductActionPerformed(java.awt.event.ActionEvent evt) {
                 new ProductManagement().setVisible(true);
                 this.dispose();
         }
 
-        // ==================== SUPPLIER CRUD METHODS (MVC Pattern) ====================
+        // ==================== LOGIC METHODS ====================
 
         /**
-         * Load all suppliers from Controller into the table
-         * Uses Controller instead of direct SQL
+         * Loads all suppliers from the database into the table.
          */
         private void loadSupplierData() {
                 DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-                model.setRowCount(0); // Clear existing rows
+                model.setRowCount(0);
 
-                // Get suppliers from Controller
                 List<Supplier> suppliers = controller.getAllSuppliers();
-
-                for (Supplier supplier : suppliers) {
+                for (Supplier s : suppliers) {
                         model.addRow(new Object[] {
-                                        supplier.getSupplierId(),
-                                        supplier.getSupplierName(),
-                                        supplier.getCompanyName(),
-                                        supplier.getPhone()
+                                        s.getSupplierId(),
+                                        s.getSupplierName(),
+                                        s.getCompanyName(),
+                                        s.getPhone()
                         });
                 }
         }
 
         /**
-         * Add a new supplier using Controller
-         * Controller handles validation and database operations
+         * Adds a new supplier.
          */
         private void addSupplier() {
-                // Call Controller - it handles validation and database
                 String result = controller.addSupplier(
                                 txt_suppliername.getText(),
                                 txt_companyname.getText(),
                                 txt_phone.getText());
 
                 if (result.startsWith("Success")) {
-                        JOptionPane.showMessageDialog(this, result,
-                                        "Success", JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(this, result, "Success", JOptionPane.INFORMATION_MESSAGE);
                         clearFields();
                         loadSupplierData();
                 } else {
-                        JOptionPane.showMessageDialog(this, result,
-                                        "Error", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(this, result, "Error", JOptionPane.ERROR_MESSAGE);
                 }
         }
 
         /**
-         * Update the selected supplier using Controller
+         * Updates the selected supplier.
          */
         private void updateSupplier() {
-                // Confirm with user first
-                int confirm = JOptionPane.showConfirmDialog(this,
-                                "Are you sure you want to update this supplier?",
-                                "Confirm Update", JOptionPane.YES_NO_OPTION);
-
-                if (confirm != JOptionPane.YES_OPTION) {
+                if (selectedSupplierId == -1) {
+                        JOptionPane.showMessageDialog(this, "Please select a supplier to update.", "Selection Error",
+                                        JOptionPane.WARNING_MESSAGE);
                         return;
                 }
 
-                // Call Controller
+                int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to update this supplier?",
+                                "Confirm", JOptionPane.YES_NO_OPTION);
+                if (confirm != JOptionPane.YES_OPTION)
+                        return;
+
                 String result = controller.updateSupplier(
                                 selectedSupplierId,
                                 txt_suppliername.getText(),
@@ -590,78 +572,62 @@ public class SupplierManagement extends javax.swing.JFrame {
                                 txt_phone.getText());
 
                 if (result.startsWith("Success")) {
-                        JOptionPane.showMessageDialog(this, result,
-                                        "Success", JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(this, result, "Success", JOptionPane.INFORMATION_MESSAGE);
                         clearFields();
                         loadSupplierData();
                 } else {
-                        JOptionPane.showMessageDialog(this, result,
-                                        "Error", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(this, result, "Error", JOptionPane.ERROR_MESSAGE);
                 }
         }
 
         /**
-         * Delete the selected supplier using Controller
+         * Deletes the selected supplier.
          */
         private void deleteSupplier() {
                 if (selectedSupplierId == -1) {
-                        JOptionPane.showMessageDialog(this, "Please select a supplier from the table to delete!",
-                                        "Selection Error", JOptionPane.WARNING_MESSAGE);
+                        JOptionPane.showMessageDialog(this, "Please select a supplier to delete.", "Selection Error",
+                                        JOptionPane.WARNING_MESSAGE);
                         return;
                 }
 
-                // Confirm with user first
-                int confirm = JOptionPane.showConfirmDialog(this,
-                                "Are you sure you want to delete this supplier?",
-                                "Confirm Delete", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-
-                if (confirm != JOptionPane.YES_OPTION) {
+                int confirm = JOptionPane.showConfirmDialog(this, "Are you sure?", "Confirm Delete",
+                                JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+                if (confirm != JOptionPane.YES_OPTION)
                         return;
-                }
 
-                // Call Controller
                 String result = controller.deleteSupplier(selectedSupplierId);
 
                 if (result.startsWith("Success")) {
-                        JOptionPane.showMessageDialog(this, result,
-                                        "Success", JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(this, result, "Success", JOptionPane.INFORMATION_MESSAGE);
                         clearFields();
                         loadSupplierData();
                 } else {
-                        JOptionPane.showMessageDialog(this, result,
-                                        "Error", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(this, result, "Error", JOptionPane.ERROR_MESSAGE);
                 }
         }
 
         /**
-         * Search suppliers using Controller
+         * Searches for suppliers by name or company.
          */
         private void searchSupplier() {
-                String searchTerm = txt_search.getText().trim();
+                String term = txt_search.getText().trim();
+                List<Supplier> suppliers = controller.searchSuppliers(term);
 
                 DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
                 model.setRowCount(0);
 
-                // Get search results from Controller
-                List<Supplier> suppliers = controller.searchSuppliers(searchTerm);
-
-                for (Supplier supplier : suppliers) {
+                for (Supplier s : suppliers) {
                         model.addRow(new Object[] {
-                                        supplier.getSupplierId(),
-                                        supplier.getSupplierName(),
-                                        supplier.getCompanyName(),
-                                        supplier.getPhone()
+                                        s.getSupplierId(),
+                                        s.getSupplierName(),
+                                        s.getCompanyName(),
+                                        s.getPhone()
                         });
-                }
-
-                if (suppliers.isEmpty() && !searchTerm.isEmpty()) {
-                        JOptionPane.showMessageDialog(this, "No suppliers found matching '" + searchTerm + "'",
-                                        "Search Result", JOptionPane.INFORMATION_MESSAGE);
                 }
         }
 
         /**
-         * Clear all input fields and reset selection
+         * Clears all fields and resets selection.
          */
         private void clearFields() {
                 txt_search.setText("");
@@ -674,19 +640,7 @@ public class SupplierManagement extends javax.swing.JFrame {
                 btn_viewdetail.setEnabled(false);
         }
 
-        /**
-         * @param args the command line arguments
-         */
         public static void main(String args[]) {
-                /* Set the Nimbus look and feel */
-                // <editor-fold defaultstate="collapsed" desc=" Look and feel setting code
-                // (optional) ">
-                /*
-                 * If Nimbus (introduced in Java SE 6) is not available, stay with the default
-                 * look and feel.
-                 * For details see
-                 * http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
-                 */
                 try {
                         for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager
                                         .getInstalledLookAndFeels()) {
@@ -695,12 +649,11 @@ public class SupplierManagement extends javax.swing.JFrame {
                                         break;
                                 }
                         }
-                } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-                        logger.log(java.util.logging.Level.SEVERE, null, ex);
+                } catch (Exception ex) {
+                        java.util.logging.Logger.getLogger(SupplierManagement.class.getName())
+                                        .log(java.util.logging.Level.SEVERE, null, ex);
                 }
-                // </editor-fold>
 
-                /* Create and display the form */
                 java.awt.EventQueue.invokeLater(() -> new SupplierManagement().setVisible(true));
         }
 

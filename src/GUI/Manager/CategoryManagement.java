@@ -1,10 +1,9 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+ * Category Management System
+ * This class handles the grouping of products into categories.
  */
 package GUI.Manager;
 
-// MVC Imports - Using Controller instead of direct database access
 import controller.CategoryController;
 import model.Category;
 import java.util.List;
@@ -12,33 +11,22 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
- * VIEW LAYER - Category Management Screen
- * 
- * This View uses CategoryController for all operations.
- * No direct database access - follows MVC pattern.
- *
- * @author Disath Damsutha
+ * Screen for managing product categories.
+ * Follows the MVC pattern by using CategoryController.
  */
 public class CategoryManagement extends javax.swing.JFrame {
 
-        private static final java.util.logging.Logger logger = java.util.logging.Logger
-                        .getLogger(CategoryManagement.class.getName());
-
-        // MVC Controller - handles all business logic and database operations
         private CategoryController controller;
-
-        // Variable to store selected category ID for update/delete operations
-        private int selectedCategoryId = -1;
+        private int selectedCategoryId = -1; // Stores the ID of the category selected in the table
 
         public CategoryManagement() {
                 initComponents();
-                controller = new CategoryController(); // Initialize MVC controller
+                controller = new CategoryController();
                 this.setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
-                loadCategoryData(); // Load categories when form opens
+                loadCategoryData(); // Load all categories into the table on startup
         }
 
         @SuppressWarnings("unchecked")
-        // <editor-fold defaultstate="collapsed" desc="Generated
         // <editor-fold defaultstate="collapsed" desc="Generated
         // Code">//GEN-BEGIN:initComponents
         private void initComponents() {
@@ -135,7 +123,8 @@ public class CategoryManagement extends javax.swing.JFrame {
                                                                                 javax.swing.GroupLayout.PREFERRED_SIZE,
                                                                                 549,
                                                                                 javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                                .addContainerGap(343, Short.MAX_VALUE)));
+                                                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE,
+                                                                                Short.MAX_VALUE)));
 
                 jPanel2.setBackground(new java.awt.Color(73, 128, 37));
                 jPanel2.setForeground(new java.awt.Color(204, 204, 255));
@@ -311,8 +300,7 @@ public class CategoryManagement extends javax.swing.JFrame {
                                                                                 javax.swing.GroupLayout.PREFERRED_SIZE)
                                                                 .addPreferredGap(
                                                                                 javax.swing.LayoutStyle.ComponentPlacement.RELATED,
-                                                                                javax.swing.GroupLayout.DEFAULT_SIZE,
-                                                                                Short.MAX_VALUE)
+                                                                                313, Short.MAX_VALUE)
                                                                 .addComponent(btn_back,
                                                                                 javax.swing.GroupLayout.PREFERRED_SIZE,
                                                                                 58,
@@ -372,13 +360,14 @@ public class CategoryManagement extends javax.swing.JFrame {
                 setLocationRelativeTo(null);
         }// </editor-fold>//GEN-END:initComponents
 
-        private void txt_searchcategoryKeyReleased(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_txt_searchcategoryKeyReleased
+        private void txt_searchcategoryKeyReleased(java.awt.event.KeyEvent evt) {
                 searchCategory();
-        }// GEN-LAST:event_txt_searchcategoryKeyReleased
+        }
 
         private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {
                 int selectedRow = jTable1.getSelectedRow();
                 if (selectedRow >= 0) {
+                        // Get data from the selected row
                         selectedCategoryId = Integer.parseInt(jTable1.getValueAt(selectedRow, 0).toString());
                         String categoryName = jTable1.getValueAt(selectedRow, 1).toString();
                         txt_categoryname.setText(categoryName);
@@ -388,40 +377,38 @@ public class CategoryManagement extends javax.swing.JFrame {
         private void btn_ProductActionPerformed(java.awt.event.ActionEvent evt) {
                 new ProductManagement().setVisible(true);
                 this.dispose();
-        }// GEN-LAST:event_btn_ProductActionPerformed
+        }
 
-        private void btn_backActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btn_backActionPerformed
+        private void btn_backActionPerformed(java.awt.event.ActionEvent evt) {
                 new ManagerDashboard().setVisible(true);
                 this.dispose();
-        }// GEN-LAST:event_btn_backActionPerformed
+        }
 
-        private void btn_updateActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btn_updateActionPerformed
+        private void btn_updateActionPerformed(java.awt.event.ActionEvent evt) {
                 updateCategory();
-        }// GEN-LAST:event_btn_updateActionPerformed
+        }
 
-        private void btn_deleteActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btn_deleteActionPerformed
+        private void btn_deleteActionPerformed(java.awt.event.ActionEvent evt) {
                 deleteCategory();
-        }// GEN-LAST:event_btn_deleteActionPerformed
+        }
 
-        private void btn_saveActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btn_saveActionPerformed
+        private void btn_saveActionPerformed(java.awt.event.ActionEvent evt) {
                 addCategory();
-        }// GEN-LAST:event_btn_saveActionPerformed
+        }
 
-        private void btn_clearActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btn_clearActionPerformed
+        private void btn_clearActionPerformed(java.awt.event.ActionEvent evt) {
                 clearFields();
-        }// GEN-LAST:event_btn_clearActionPerformed
+        }
 
-        // ==================== CATEGORY CRUD METHODS (MVC Pattern) ====================
+        // ==================== LOGIC METHODS ====================
 
         /**
-         * Load all categories from Controller into the table
-         * Uses Controller instead of direct SQL
+         * Loads all categories from the database and displays them in the table.
          */
         private void loadCategoryData() {
                 DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-                model.setRowCount(0); // Clear existing rows
+                model.setRowCount(0);
 
-                // Get categories with product count from Controller
                 List<Category> categories = controller.getAllCategories();
 
                 for (Category category : categories) {
@@ -434,98 +421,84 @@ public class CategoryManagement extends javax.swing.JFrame {
         }
 
         /**
-         * Add a new category using Controller
-         * Controller handles validation and database operations
+         * Adds a new category using the name provided in the text field.
          */
         private void addCategory() {
-                // Call Controller - it handles validation and database
-                String result = controller.addCategory(txt_categoryname.getText());
+                String name = txt_categoryname.getText();
+                String result = controller.addCategory(name);
 
                 if (result.startsWith("Success")) {
-                        JOptionPane.showMessageDialog(this, result,
-                                        "Success", JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(this, result, "Success", JOptionPane.INFORMATION_MESSAGE);
                         clearFields();
                         loadCategoryData();
                 } else {
-                        JOptionPane.showMessageDialog(this, result,
-                                        "Error", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(this, result, "Error", JOptionPane.ERROR_MESSAGE);
                 }
         }
 
         /**
-         * Update the selected category using Controller
+         * Updates an existing category's name.
          */
         private void updateCategory() {
-                // Confirm with user first
-                int confirm = JOptionPane.showConfirmDialog(this,
-                                "Are you sure you want to update this category?",
-                                "Confirm Update", JOptionPane.YES_NO_OPTION);
-
-                if (confirm != JOptionPane.YES_OPTION) {
+                if (selectedCategoryId == -1) {
+                        JOptionPane.showMessageDialog(this, "Please select a category to update.", "Selection Error",
+                                        JOptionPane.WARNING_MESSAGE);
                         return;
                 }
 
-                // Call Controller
-                String result = controller.updateCategory(
-                                selectedCategoryId,
-                                txt_categoryname.getText());
+                int confirm = JOptionPane.showConfirmDialog(this, "Are you sure you want to update this category?",
+                                "Confirm", JOptionPane.YES_NO_OPTION);
+                if (confirm != JOptionPane.YES_OPTION)
+                        return;
+
+                String name = txt_categoryname.getText();
+                String result = controller.updateCategory(selectedCategoryId, name);
 
                 if (result.startsWith("Success")) {
-                        JOptionPane.showMessageDialog(this, result,
-                                        "Success", JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(this, result, "Success", JOptionPane.INFORMATION_MESSAGE);
                         clearFields();
                         loadCategoryData();
                 } else {
-                        JOptionPane.showMessageDialog(this, result,
-                                        "Error", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(this, result, "Error", JOptionPane.ERROR_MESSAGE);
                 }
         }
 
         /**
-         * Delete the selected category using Controller
+         * Deletes the selected category.
          */
         private void deleteCategory() {
                 if (selectedCategoryId == -1) {
-                        JOptionPane.showMessageDialog(this, "Please select a category from the table to delete!",
-                                        "Selection Error", JOptionPane.WARNING_MESSAGE);
+                        JOptionPane.showMessageDialog(this, "Please select a category to delete.", "Selection Error",
+                                        JOptionPane.WARNING_MESSAGE);
                         return;
                 }
 
-                // Confirm with user first
                 int confirm = JOptionPane.showConfirmDialog(this,
-                                "Are you sure you want to delete this category?\n" +
-                                                "This will affect all products in this category!",
-                                "Confirm Delete", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-
-                if (confirm != JOptionPane.YES_OPTION) {
+                                "Are you sure? This may affect products in this category.", "Confirm Delete",
+                                JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+                if (confirm != JOptionPane.YES_OPTION)
                         return;
-                }
 
-                // Call Controller
                 String result = controller.deleteCategory(selectedCategoryId);
 
                 if (result.startsWith("Success")) {
-                        JOptionPane.showMessageDialog(this, result,
-                                        "Success", JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(this, result, "Success", JOptionPane.INFORMATION_MESSAGE);
                         clearFields();
                         loadCategoryData();
                 } else {
-                        JOptionPane.showMessageDialog(this, result,
-                                        "Error", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(this, result, "Error", JOptionPane.ERROR_MESSAGE);
                 }
         }
 
         /**
-         * Search categories using Controller
+         * Searches for categories based on the search term.
          */
         private void searchCategory() {
-                String searchTerm = txt_searchcategory.getText().trim();
+                String term = txt_searchcategory.getText().trim();
+                List<Category> categories = controller.searchCategories(term);
 
                 DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
                 model.setRowCount(0);
-
-                // Get search results from Controller
-                List<Category> categories = controller.searchCategories(searchTerm);
 
                 for (Category category : categories) {
                         model.addRow(new Object[] {
@@ -534,37 +507,20 @@ public class CategoryManagement extends javax.swing.JFrame {
                                         category.getProductCount()
                         });
                 }
-
-                if (categories.isEmpty() && !searchTerm.isEmpty()) {
-                        JOptionPane.showMessageDialog(this, "No categories found matching '" + searchTerm + "'",
-                                        "Search Result", JOptionPane.INFORMATION_MESSAGE);
-                }
         }
 
         /**
-         * Clear all input fields and reset selection
+         * Clears all input fields and resets the selection state.
          */
         private void clearFields() {
                 txt_searchcategory.setText("");
                 txt_categoryname.setText("");
                 selectedCategoryId = -1;
                 jTable1.clearSelection();
-                loadCategoryData(); // Refresh the table
+                loadCategoryData();
         }
 
-        /**
-         * @param args the command line arguments
-         */
         public static void main(String args[]) {
-                /* Set the Nimbus look and feel */
-                // <editor-fold defaultstate="collapsed" desc=" Look and feel setting code
-                // (optional) ">
-                /*
-                 * If Nimbus (introduced in Java SE 6) is not available, stay with the default
-                 * look and feel.
-                 * For details see
-                 * http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
-                 */
                 try {
                         for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager
                                         .getInstalledLookAndFeels()) {
@@ -573,12 +529,11 @@ public class CategoryManagement extends javax.swing.JFrame {
                                         break;
                                 }
                         }
-                } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-                        logger.log(java.util.logging.Level.SEVERE, null, ex);
+                } catch (Exception ex) {
+                        java.util.logging.Logger.getLogger(CategoryManagement.class.getName())
+                                        .log(java.util.logging.Level.SEVERE, null, ex);
                 }
-                // </editor-fold>
 
-                /* Create and display the form */
                 java.awt.EventQueue.invokeLater(() -> new CategoryManagement().setVisible(true));
         }
 

@@ -32,6 +32,7 @@ public class SalesHistoryFrame extends javax.swing.JFrame {
         JPanel mainPanel = new JPanel(new BorderLayout(10, 10));
         mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         mainPanel.setBackground(new Color(243, 247, 244));
+        this.setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
 
         // Sales Table (Master)
         salesModel = new DefaultTableModel(
@@ -58,7 +59,7 @@ public class SalesHistoryFrame extends javax.swing.JFrame {
 
         // Items Table (Detail)
         itemsModel = new DefaultTableModel(
-                new Object[] { "Item ID", "Product ID", "Quantity", "Unit Price", "Total Price" }, 0) {
+                new Object[] { "Item ID", "Product ID", "Product Name", "Quantity", "Unit Price", "Total Price" }, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -154,6 +155,7 @@ public class SalesHistoryFrame extends javax.swing.JFrame {
             itemsModel.addRow(new Object[] {
                     i.getItemId(),
                     i.getProductId(),
+                    i.getProductName(),
                     i.getQuantity(),
                     i.getUnitPrice(),
                     i.getTotalPrice()

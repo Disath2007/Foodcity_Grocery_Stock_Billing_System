@@ -112,7 +112,9 @@ public class SalesController {
 
     public List<SaleItem> getItemsBySaleId(int saleId) {
         List<SaleItem> itemList = new ArrayList<>();
-        String sql = "SELECT * FROM sales_items WHERE sale_id = ?";
+        String sql = "SELECT si.*, p.product_name FROM sales_items si " +
+                "JOIN product p ON si.product_id = p.product_id " +
+                "WHERE si.sale_id = ?";
 
         try (Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -125,6 +127,7 @@ public class SalesController {
                         rs.getInt("item_id"),
                         rs.getInt("sale_id"),
                         rs.getInt("product_id"),
+                        rs.getString("product_name"),
                         rs.getInt("quantity"),
                         rs.getDouble("unit_price"),
                         rs.getDouble("total_price"));
@@ -134,5 +137,82 @@ public class SalesController {
             e.printStackTrace();
         }
         return itemList;
+    }
+
+    public double getTodaySales() {
+        double total = 0;
+        String sql = "SELECT SUM(grand_total) FROM sales WHERE DATE(sale_date) = CURDATE()";
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql);
+                ResultSet rs = pstmt.executeQuery()) {
+            if (rs.next()) {
+                total = rs.getDouble(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return total;
+    }
+
+    public double getMonthlySales() {
+        double total = 0;
+        String sql = "SELECT SUM(grand_total) FROM sales WHERE MONTH(sale_date) = MONTH(CURRENT_DATE()) AND YEAR(sale_date) = YEAR(CURRENT_DATE())";
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql);
+                ResultSet rs = pstmt.executeQuery()) {
+            if (rs.next()) {
+                total = rs.getDouble(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return total;
+    }
+
+    public double getMonthlyProfit() {
+        double profit = 0;
+        // Join sales, sales_items, and product to calculate profit
+        // profit = (selling_price - buying_price) * quantity
+        // Note: sales_items.unit_price is the selling price at time of sale
+        String sql = "SELECT SUM((si.unit_price - p.buying_price) * si.quantity) " +
+                "FROM sales s " +
+                "JOIN sales_items si ON s.sale_id = si.sale_id " +
+                "JOIN product p ON si.product_id = p.product_id " +
+                "WHERE MONTH(s.sale_date) = MONTH(CURRENT_DATE()) AND YEAR(s.sale_date) = YEAR(CURRENT_DATE())";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql);
+                ResultSet rs = pstmt.executeQuery()) {
+            if (rs.next()) {
+                profit = rs.getDouble(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return profit;
+    }
+
+    public java.util.LinkedHashMap<String, Double> getLastSixMonthsSales() {
+        java.util.LinkedHashMap<String, Double> salesData = new java.util.LinkedHashMap<>();
+
+        // Query to get last 6 months sales, grouped by month
+        // Note: using %b returns abbreviated month name (Jan, Feb, etc.)
+        String sql = "SELECT DATE_FORMAT(sale_date, '%b') as month_name, SUM(grand_total) as total_sales " +
+                "FROM sales " +
+                "WHERE sale_date >= DATE_SUB(CURDATE(), INTERVAL 6 MONTH) " +
+                "GROUP BY YEAR(sale_date), MONTH(sale_date), month_name " +
+                "ORDER BY YEAR(sale_date), MONTH(sale_date)";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+                PreparedStatement pstmt = conn.prepareStatement(sql);
+                ResultSet rs = pstmt.executeQuery()) {
+
+            while (rs.next()) {
+                salesData.put(rs.getString("month_name"), rs.getDouble("total_sales"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return salesData;
     }
 }

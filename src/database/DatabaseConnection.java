@@ -23,9 +23,9 @@ public class DatabaseConnection {
             Connection conn = DriverManager.getConnection(
                     "jdbc:mysql://localhost:3306/foodcity_db",
                     "root",
-                    "Disath06@#");
+                    "VBNM2006");
 
-            System.out.println("Success! DB connected.");
+            System.out.println("Success! DB connected to Docker Cnotaienr.");
             return conn;
 
         } catch (SQLException e) {
