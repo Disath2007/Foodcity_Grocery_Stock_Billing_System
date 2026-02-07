@@ -643,6 +643,7 @@ public class ProductManagement extends javax.swing.JFrame {
                                         p.getProductId(),
                                         p.getProductName(),
                                         p.getCategoryName(),
+                                        String.format("%.2f", p.getBuyingPrice()),
                                         String.format("%.2f", p.getPrice())
                         });
                 }

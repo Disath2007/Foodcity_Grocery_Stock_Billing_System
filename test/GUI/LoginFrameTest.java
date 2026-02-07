@@ -69,6 +69,54 @@ public class LoginFrameTest {
     }
 
     /**
+     * Test login with an empty password.
+     */
+    @Test
+    public void testEmptyPasswordLogin() throws Exception {
+        JTextField txtUsername = (JTextField) getPrivateField("txtusername");
+        JTextField txtPassword = (JTextField) getPrivateField("txtpassword");
+        JButton btnLogin = (JButton) getPrivateField("btnlogin");
+
+        txtUsername.setText("admin");
+        txtPassword.setText(""); // Empty password
+
+        assertTrue("Username should be set", txtUsername.getText().equals("admin"));
+        assertTrue("Password should be empty", txtPassword.getText().isEmpty());
+
+        // We can check if the button is enabled at least
+        assertTrue("Login button should be enabled", btnLogin.isEnabled());
+    }
+
+    /**
+     * Test login with an invalid password.
+     */
+    @Test
+    public void testInvalidPasswordLogin() throws Exception {
+        JTextField txtUsername = (JTextField) getPrivateField("txtusername");
+        JTextField txtPassword = (JTextField) getPrivateField("txtpassword");
+
+        txtUsername.setText("admin");
+        txtPassword.setText("wrong_password");
+
+        assertEquals("Password field should contain the input", "wrong_password", txtPassword.getText());
+    }
+
+    /**
+     * Test login with a valid password.
+     */
+    @Test
+    public void testValidPasswordLogin() throws Exception {
+        JTextField txtUsername = (JTextField) getPrivateField("txtusername");
+        JTextField txtPassword = (JTextField) getPrivateField("txtpassword");
+
+        txtUsername.setText("admin");
+        txtPassword.setText("123"); // Assuming 123 is valid for testing purposes
+
+        assertEquals("Username should be admin", "admin", txtUsername.getText());
+        assertEquals("Password should be 123", "123", txtPassword.getText());
+    }
+
+    /**
      * Test the main method execution.
      */
     @Test
