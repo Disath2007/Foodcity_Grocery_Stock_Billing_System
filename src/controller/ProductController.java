@@ -115,36 +115,25 @@ public class ProductController {
     }
 
     /**
-     * Adds a new product to the database
+     * Adds a new product to the database using the Product model
      * 
-     * @param productName Name of the product
-     * @param category    The category object
-     * @param price       Price as string (will be parsed)
+     * @param product The Product object containing data
      * @return String message indicating success or error
      */
-    public String addProduct(String productName, Category category, String price, String buyingPrice) {
+    public String addProduct(Product product) {
         // Validate inputs
-        if (productName == null || productName.trim().isEmpty()) {
+        if (product.getProductName() == null || product.getProductName().trim().isEmpty()) {
             return "Error: Product name cannot be empty!";
         }
-        if (category == null) {
+        if (product.getCategoryId() <= 0) {
             return "Error: Please select a category!";
         }
-
-        double priceValue;
-        double buyingPriceValue;
-        try {
-            priceValue = Double.parseDouble(price);
-            buyingPriceValue = Double.parseDouble(buyingPrice);
-            if (priceValue < 0 || buyingPriceValue < 0) {
-                return "Error: Prices cannot be negative!";
-            }
-        } catch (NumberFormatException e) {
-            return "Error: Invalid price format!";
+        if (product.getPrice() < 0 || product.getBuyingPrice() < 0) {
+            return "Error: Prices cannot be negative!";
         }
 
         // Check if product name already exists
-        if (isProductNameExists(productName, -1)) {
+        if (isProductNameExists(product.getProductName(), -1)) {
             return "Error: Product name already exists!";
         }
 
@@ -152,10 +141,10 @@ public class ProductController {
         try (Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            pstmt.setString(1, productName.trim());
-            pstmt.setInt(2, category.getCategoryId());
-            pstmt.setDouble(3, priceValue);
-            pstmt.setDouble(4, buyingPriceValue);
+            pstmt.setString(1, product.getProductName().trim());
+            pstmt.setInt(2, product.getCategoryId());
+            pstmt.setDouble(3, product.getPrice());
+            pstmt.setDouble(4, product.getBuyingPrice());
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
                 return "Success: Product added successfully!";
@@ -169,38 +158,25 @@ public class ProductController {
     }
 
     /**
-     * Updates an existing product
+     * Updates an existing product using the Product model
      * 
-     * @param productId   ID of the product to update
-     * @param productName New name
-     * @param category    New category
-     * @param price       New price as string
+     * @param product The Product object containing updated data
      * @return String message indicating success or error
      */
-    public String updateProduct(int productId, String productName, Category category, String price,
-            String buyingPrice) {
+    public String updateProduct(Product product) {
         // Validate inputs
-        if (productName == null || productName.trim().isEmpty()) {
+        if (product.getProductName() == null || product.getProductName().trim().isEmpty()) {
             return "Error: Product name cannot be empty!";
         }
-        if (category == null) {
+        if (product.getCategoryId() <= 0) {
             return "Error: Please select a category!";
         }
-
-        double priceValue;
-        double buyingPriceValue;
-        try {
-            priceValue = Double.parseDouble(price);
-            buyingPriceValue = Double.parseDouble(buyingPrice);
-            if (priceValue < 0 || buyingPriceValue < 0) {
-                return "Error: Prices cannot be negative!";
-            }
-        } catch (NumberFormatException e) {
-            return "Error: Invalid price format!";
+        if (product.getPrice() < 0 || product.getBuyingPrice() < 0) {
+            return "Error: Prices cannot be negative!";
         }
 
         // Check if product name already exists (excluding current product)
-        if (isProductNameExists(productName, productId)) {
+        if (isProductNameExists(product.getProductName(), product.getProductId())) {
             return "Error: Product name already exists!";
         }
 
@@ -208,11 +184,11 @@ public class ProductController {
         try (Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            pstmt.setString(1, productName.trim());
-            pstmt.setInt(2, category.getCategoryId());
-            pstmt.setDouble(3, priceValue);
-            pstmt.setDouble(4, buyingPriceValue);
-            pstmt.setInt(5, productId);
+            pstmt.setString(1, product.getProductName().trim());
+            pstmt.setInt(2, product.getCategoryId());
+            pstmt.setDouble(3, product.getPrice());
+            pstmt.setDouble(4, product.getBuyingPrice());
+            pstmt.setInt(5, product.getProductId());
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
                 return "Success: Product updated successfully!";

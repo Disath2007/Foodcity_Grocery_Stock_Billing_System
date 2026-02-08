@@ -25,7 +25,7 @@ import java.util.List;
 public class UserController {
 
     /**
-     * Authenticates a user with username and password  
+     * Authenticates a user with username and password
      * 
      * @param username The username
      * @param password The password
@@ -165,28 +165,25 @@ public class UserController {
     }
 
     /**
-     * Adds a new user to the database
+     * Adds a new user to the database using the User model
      * 
-     * @param fullName Full name
-     * @param password Password
-     * @param role     User role
-     * @param phone    Phone number
+     * @param user The User object containing user data
      * @return String message indicating success or error
      */
-    public String addUser(String fullName, String password, String role, String phone) {
-        // Validate inputs
-        if (fullName == null || fullName.trim().isEmpty()) {
+    public String addUser(User user) {
+        // Validate inputs using getters
+        if (user.getFullName() == null || user.getFullName().trim().isEmpty()) {
             return "Error: Full name cannot be empty!";
         }
-        if (password == null || password.isEmpty()) {
+        if (user.getPassword() == null || user.getPassword().isEmpty()) {
             return "Error: Password cannot be empty!";
         }
-        if (role == null || role.trim().isEmpty()) {
+        if (user.getRole() == null || user.getRole().trim().isEmpty()) {
             return "Error: Please select a role!";
         }
 
         // Generate username from full name (lowercase, no spaces)
-        String username = fullName.trim().toLowerCase().replace(" ", "");
+        String username = user.getFullName().trim().toLowerCase().replace(" ", "");
 
         // Check if username already exists
         if (isUsernameExists(username, -1)) {
@@ -198,16 +195,21 @@ public class UserController {
             username = username + suffix;
         }
 
+        // Set the generated username back to the model
+        user.setUsername(username);
+
         String sql = "INSERT INTO users (username, password, full_name, phone, role) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            pstmt.setString(1, username);
-            pstmt.setString(2, password);
-            pstmt.setString(3, fullName.trim());
-            pstmt.setString(4, phone != null ? phone.trim() : "");
-            pstmt.setString(5, role.trim());
+            pstmt.setString(1, user.getUsername());
+            pstmt.setString(2, user.getPassword());
+            pstmt.setString(3, user.getFullName().trim());
+            pstmt.setString(4, user.getPhone() != null ? user.getPhone().trim() : "");
+            pstmt.setString(5, user.getRole().trim());
+
             int rowsAffected = pstmt.executeUpdate();
+
             if (rowsAffected > 0) {
                 return "Success: User added successfully! Username: " + username;
             } else {
@@ -220,26 +222,22 @@ public class UserController {
     }
 
     /**
-     * Updates an existing user
+     * Updates an existing user using the User model
      * 
-     * @param userId   User ID
-     * @param fullName New full name
-     * @param password New password (null to keep existing)
-     * @param role     New role
-     * @param phone    New phone number
+     * @param user The User object containing updated data (must include userId)
      * @return String message indicating success or error
      */
-    public String updateUser(int userId, String fullName, String password, String role, String phone) {
-        // Validate inputs
-        if (fullName == null || fullName.trim().isEmpty()) {
+    public String updateUser(User user) {
+        // Validate inputs using getters
+        if (user.getFullName() == null || user.getFullName().trim().isEmpty()) {
             return "Error: Full name cannot be empty!";
         }
-        if (role == null || role.trim().isEmpty()) {
+        if (user.getRole() == null || user.getRole().trim().isEmpty()) {
             return "Error: Please select a role!";
         }
 
         String sql;
-        if (password != null && !password.isEmpty()) {
+        if (user.getPassword() != null && !user.getPassword().isEmpty()) {
             sql = "UPDATE users SET password = ?, full_name = ?, phone = ?, role = ? WHERE user_id = ?";
         } else {
             sql = "UPDATE users SET full_name = ?, phone = ?, role = ? WHERE user_id = ?";
@@ -248,17 +246,17 @@ public class UserController {
         try (Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            if (password != null && !password.isEmpty()) {
-                pstmt.setString(1, password);
-                pstmt.setString(2, fullName.trim());
-                pstmt.setString(3, phone != null ? phone.trim() : "");
-                pstmt.setString(4, role.trim());
-                pstmt.setInt(5, userId);
+            if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+                pstmt.setString(1, user.getPassword());
+                pstmt.setString(2, user.getFullName().trim());
+                pstmt.setString(3, user.getPhone() != null ? user.getPhone().trim() : "");
+                pstmt.setString(4, user.getRole().trim());
+                pstmt.setInt(5, user.getUserId());
             } else {
-                pstmt.setString(1, fullName.trim());
-                pstmt.setString(2, phone != null ? phone.trim() : "");
-                pstmt.setString(3, role.trim());
-                pstmt.setInt(4, userId);
+                pstmt.setString(1, user.getFullName().trim());
+                pstmt.setString(2, user.getPhone() != null ? user.getPhone().trim() : "");
+                pstmt.setString(3, user.getRole().trim());
+                pstmt.setInt(4, user.getUserId());
             }
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {

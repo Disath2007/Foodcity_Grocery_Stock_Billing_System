@@ -26,7 +26,6 @@ public class CategoryManagement extends javax.swing.JFrame {
                 loadCategoryData(); // Load all categories into the table on startup
         }
 
-        @SuppressWarnings("unchecked")
         // <editor-fold defaultstate="collapsed" desc="Generated
         // Code">//GEN-BEGIN:initComponents
         private void initComponents() {
@@ -424,8 +423,12 @@ public class CategoryManagement extends javax.swing.JFrame {
          * Adds a new category using the name provided in the text field.
          */
         private void addCategory() {
-                String name = txt_categoryname.getText();
-                String result = controller.addCategory(name);
+                // 1. Create Model object
+                Category category = new Category();
+                category.setCategoryName(txt_categoryname.getText());
+
+                // 2. Pass to Controller
+                String result = controller.addCategory(category);
 
                 if (result.startsWith("Success")) {
                         JOptionPane.showMessageDialog(this, result, "Success", JOptionPane.INFORMATION_MESSAGE);
@@ -451,8 +454,13 @@ public class CategoryManagement extends javax.swing.JFrame {
                 if (confirm != JOptionPane.YES_OPTION)
                         return;
 
-                String name = txt_categoryname.getText();
-                String result = controller.updateCategory(selectedCategoryId, name);
+                // 1. Create and populate Model object
+                Category category = new Category();
+                category.setCategoryId(selectedCategoryId);
+                category.setCategoryName(txt_categoryname.getText());
+
+                // 2. Pass to Controller
+                String result = controller.updateCategory(category);
 
                 if (result.startsWith("Success")) {
                         JOptionPane.showMessageDialog(this, result, "Success", JOptionPane.INFORMATION_MESSAGE);

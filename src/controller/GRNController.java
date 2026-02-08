@@ -97,32 +97,21 @@ public class GRNController {
     }
 
     /**
-     * Add a new GRN record and update stock
+     * Add a new GRN record and update stock using the GRN model
+     * 
+     * @param grn The GRN object containing data
+     * @return String message indicating success or error
      */
-    public String addGRN(int productId, int supplierId, String orderedQtyStr, String deliveredQtyStr) {
+    public String addGRN(GRN grn) {
         // Validate inputs
-        if (productId <= 0) {
+        if (grn.getProductId() <= 0) {
             return "Error: Please select a product!";
         }
-        if (supplierId <= 0) {
+        if (grn.getSupplierId() <= 0) {
             return "Error: Please select a supplier!";
         }
-        if (orderedQtyStr == null || orderedQtyStr.trim().isEmpty()) {
-            return "Error: Ordered quantity cannot be empty!";
-        }
-        if (deliveredQtyStr == null || deliveredQtyStr.trim().isEmpty()) {
-            return "Error: Delivered quantity cannot be empty!";
-        }
-
-        int orderedQty, deliveredQty;
-        try {
-            orderedQty = Integer.parseInt(orderedQtyStr.trim());
-            deliveredQty = Integer.parseInt(deliveredQtyStr.trim());
-            if (orderedQty <= 0 || deliveredQty < 0) {
-                return "Error: Invalid quantity values!";
-            }
-        } catch (NumberFormatException e) {
-            return "Error: Quantity must be a valid number!";
+        if (grn.getOrderedQuantity() <= 0 || grn.getDeliveredQuantity() < 0) {
+            return "Error: Invalid quantity values!";
         }
 
         String insertSql = "INSERT INTO grn (product_id, supplier_id, ordered_quantity, delivered_quantity) VALUES (?, ?, ?, ?)";
@@ -135,18 +124,18 @@ public class GRNController {
 
             // Insert GRN record
             try (PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
-                pstmt.setInt(1, productId);
-                pstmt.setInt(2, supplierId);
-                pstmt.setInt(3, orderedQty);
-                pstmt.setInt(4, deliveredQty);
+                pstmt.setInt(1, grn.getProductId());
+                pstmt.setInt(2, grn.getSupplierId());
+                pstmt.setInt(3, grn.getOrderedQuantity());
+                pstmt.setInt(4, grn.getDeliveredQuantity());
                 pstmt.executeUpdate();
             }
 
             // Update or Insert stock with delivered quantity
             try (PreparedStatement pstmt = conn.prepareStatement(updateStockSql)) {
-                pstmt.setInt(1, productId);
-                pstmt.setInt(2, deliveredQty); // Value for INSERT (initial quantity)
-                pstmt.setInt(3, deliveredQty); // Value for UPDATE (increment)
+                pstmt.setInt(1, grn.getProductId());
+                pstmt.setInt(2, grn.getDeliveredQuantity()); // Value for INSERT (initial quantity)
+                pstmt.setInt(3, grn.getDeliveredQuantity()); // Value for UPDATE (increment)
                 pstmt.executeUpdate();
             }
 
@@ -160,28 +149,17 @@ public class GRNController {
     }
 
     /**
-     * Update an existing GRN record
+     * Update an existing GRN record using the GRN model
+     * 
+     * @param grn The GRN object containing updated data
+     * @return String message indicating success or error
      */
-    public String updateGRN(int grnId, int productId, int supplierId, String orderedQtyStr, String deliveredQtyStr) {
-        if (grnId <= 0) {
+    public String updateGRN(GRN grn) {
+        if (grn.getGrnId() <= 0) {
             return "Error: Please select a GRN to update!";
         }
-        if (orderedQtyStr == null || orderedQtyStr.trim().isEmpty()) {
-            return "Error: Ordered quantity cannot be empty!";
-        }
-        if (deliveredQtyStr == null || deliveredQtyStr.trim().isEmpty()) {
-            return "Error: Delivered quantity cannot be empty!";
-        }
-
-        int orderedQty, deliveredQty;
-        try {
-            orderedQty = Integer.parseInt(orderedQtyStr.trim());
-            deliveredQty = Integer.parseInt(deliveredQtyStr.trim());
-            if (orderedQty <= 0 || deliveredQty < 0) {
-                return "Error: Invalid quantity values!";
-            }
-        } catch (NumberFormatException e) {
-            return "Error: Quantity must be a valid number!";
+        if (grn.getOrderedQuantity() <= 0 || grn.getDeliveredQuantity() < 0) {
+            return "Error: Invalid quantity values!";
         }
 
         // Get old delivered quantity to adjust stock
@@ -191,7 +169,7 @@ public class GRNController {
 
         try (Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(selectSql)) {
-            pstmt.setInt(1, grnId);
+            pstmt.setInt(1, grn.getGrnId());
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
                 oldDeliveredQty = rs.getInt("delivered_quantity");
@@ -209,20 +187,20 @@ public class GRNController {
 
             // Update GRN record
             try (PreparedStatement pstmt = conn.prepareStatement(updateSql)) {
-                pstmt.setInt(1, productId);
-                pstmt.setInt(2, supplierId);
-                pstmt.setInt(3, orderedQty);
-                pstmt.setInt(4, deliveredQty);
-                pstmt.setInt(5, grnId);
+                pstmt.setInt(1, grn.getProductId());
+                pstmt.setInt(2, grn.getSupplierId());
+                pstmt.setInt(3, grn.getOrderedQuantity());
+                pstmt.setInt(4, grn.getDeliveredQuantity());
+                pstmt.setInt(5, grn.getGrnId());
                 pstmt.executeUpdate();
             }
 
             // Adjust stock: subtract old, add new
-            if (oldProductId == productId) {
-                int stockDiff = deliveredQty - oldDeliveredQty;
+            if (oldProductId == grn.getProductId()) {
+                int stockDiff = grn.getDeliveredQuantity() - oldDeliveredQty;
                 try (PreparedStatement pstmt = conn.prepareStatement(updateStockSql)) {
                     pstmt.setInt(1, stockDiff);
-                    pstmt.setInt(2, productId);
+                    pstmt.setInt(2, grn.getProductId());
                     pstmt.executeUpdate();
                 }
             } else {
@@ -233,8 +211,8 @@ public class GRNController {
                     pstmt.executeUpdate();
                 }
                 try (PreparedStatement pstmt = conn.prepareStatement(updateStockSql)) {
-                    pstmt.setInt(1, deliveredQty);
-                    pstmt.setInt(2, productId);
+                    pstmt.setInt(1, grn.getDeliveredQuantity());
+                    pstmt.setInt(2, grn.getProductId());
                     pstmt.executeUpdate();
                 }
             }

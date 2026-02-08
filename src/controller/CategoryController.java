@@ -88,19 +88,19 @@ public class CategoryController {
     }
 
     /**
-     * Adds a new category to the database
+     * Adds a new category to the database using the Category model
      * 
-     * @param categoryName The name of the category to add
+     * @param category The Category object containing data
      * @return String message indicating success or error
      */
-    public String addCategory(String categoryName) {
+    public String addCategory(Category category) {
         // Validate input
-        if (categoryName == null || categoryName.trim().isEmpty()) {
+        if (category.getCategoryName() == null || category.getCategoryName().trim().isEmpty()) {
             return "Error: Category name cannot be empty!";
         }
 
         // Check if category already exists
-        if (isCategoryNameExists(categoryName, -1)) {
+        if (isCategoryNameExists(category.getCategoryName(), -1)) {
             return "Error: Category name already exists!";
         }
 
@@ -108,7 +108,7 @@ public class CategoryController {
         try (Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            pstmt.setString(1, categoryName.trim());
+            pstmt.setString(1, category.getCategoryName().trim());
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
                 return "Success: Category added successfully!";
@@ -122,20 +122,19 @@ public class CategoryController {
     }
 
     /**
-     * Updates an existing category
+     * Updates an existing category using the Category model
      * 
-     * @param categoryId   The ID of the category to update
-     * @param categoryName The new name for the category
+     * @param category The Category object containing updated data
      * @return String message indicating success or error
      */
-    public String updateCategory(int categoryId, String categoryName) {
+    public String updateCategory(Category category) {
         // Validate input
-        if (categoryName == null || categoryName.trim().isEmpty()) {
+        if (category.getCategoryName() == null || category.getCategoryName().trim().isEmpty()) {
             return "Error: Category name cannot be empty!";
         }
 
         // Check if another category has the same name
-        if (isCategoryNameExists(categoryName, categoryId)) {
+        if (isCategoryNameExists(category.getCategoryName(), category.getCategoryId())) {
             return "Error: Category name already exists!";
         }
 
@@ -143,8 +142,8 @@ public class CategoryController {
         try (Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            pstmt.setString(1, categoryName.trim());
-            pstmt.setInt(2, categoryId);
+            pstmt.setString(1, category.getCategoryName().trim());
+            pstmt.setInt(2, category.getCategoryId());
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
                 return "Success: Category updated successfully!";

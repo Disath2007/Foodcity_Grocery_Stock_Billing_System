@@ -86,26 +86,15 @@ public class StockController {
     }
 
     /**
-     * Updates the quantity of a stock item
+     * Updates the quantity of a stock item using the Stock model
      * 
-     * @param productId ID of the product
-     * @param quantity  New quantity value
+     * @param stock The Stock object containing updated data
      * @return String message indicating success or error
      */
-    public String updateStockQuantity(int productId, String quantityStr) {
+    public String updateStockQuantity(Stock stock) {
         // Validate inputs
-        if (quantityStr == null || quantityStr.trim().isEmpty()) {
-            return "Please enter a quantity";
-        }
-
-        int quantity;
-        try {
-            quantity = Integer.parseInt(quantityStr.trim());
-            if (quantity < 0) {
-                return "Quantity cannot be negative";
-            }
-        } catch (NumberFormatException e) {
-            return "Invalid quantity format";
+        if (stock.getQuantity() < 0) {
+            return "Quantity cannot be negative";
         }
 
         String sql = "UPDATE stock SET quantity = ? WHERE product_id = ?";
@@ -113,8 +102,8 @@ public class StockController {
         try (Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            pstmt.setInt(1, quantity);
-            pstmt.setInt(2, productId);
+            pstmt.setInt(1, stock.getQuantity());
+            pstmt.setInt(2, stock.getProductId());
 
             int rowsAffected = pstmt.executeUpdate();
 

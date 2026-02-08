@@ -98,7 +98,7 @@
                           <Component id="lblrole" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="lblpassword" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="lblusername" min="-2" max="-2" attributes="0"/>
-                          <Component id="txtUsername2" alignment="0" max="32767" attributes="0"/>
+                          <Component id="Password" alignment="0" max="32767" attributes="0"/>
                           <Component id="txtUsername" alignment="0" max="32767" attributes="0"/>
                           <Component id="cmbRole" alignment="0" max="32767" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
@@ -127,7 +127,7 @@
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="lblpassword" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="txtUsername2" min="-2" pref="37" max="-2" attributes="0"/>
+                      <Component id="Password" min="-2" pref="37" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
                       <Component id="lblrole" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
@@ -178,7 +178,7 @@
                 <Property name="text" type="java.lang.String" value="Password :"/>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="txtUsername2">
+            <Component class="javax.swing.JTextField" name="Password">
             </Component>
             <Component class="javax.swing.JLabel" name="lblrole">
               <Properties>

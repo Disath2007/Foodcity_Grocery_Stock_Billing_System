@@ -92,19 +92,17 @@ public class SupplierController {
     }
 
     /**
-     * Adds a new supplier to the database
+     * Adds a new supplier to the database using the Supplier model
      * 
-     * @param supplierName Name of the supplier
-     * @param companyName  Company name
-     * @param phone        Phone number
+     * @param supplier The Supplier object containing data
      * @return String message indicating success or error
      */
-    public String addSupplier(String supplierName, String companyName, String phone) {
+    public String addSupplier(Supplier supplier) {
         // Validate inputs
-        if (supplierName == null || supplierName.trim().isEmpty()) {
+        if (supplier.getSupplierName() == null || supplier.getSupplierName().trim().isEmpty()) {
             return "Error: Supplier name cannot be empty!";
         }
-        if (companyName == null || companyName.trim().isEmpty()) {
+        if (supplier.getCompanyName() == null || supplier.getCompanyName().trim().isEmpty()) {
             return "Error: Company name cannot be empty!";
         }
 
@@ -112,9 +110,9 @@ public class SupplierController {
         try (Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            pstmt.setString(1, supplierName.trim());
-            pstmt.setString(2, companyName.trim());
-            pstmt.setString(3, phone != null ? phone.trim() : "");
+            pstmt.setString(1, supplier.getSupplierName().trim());
+            pstmt.setString(2, supplier.getCompanyName().trim());
+            pstmt.setString(3, supplier.getPhone() != null ? supplier.getPhone().trim() : "");
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
                 return "Success: Supplier added successfully!";
@@ -128,20 +126,17 @@ public class SupplierController {
     }
 
     /**
-     * Updates an existing supplier
+     * Updates an existing supplier using the Supplier model
      * 
-     * @param supplierId   ID of the supplier to update
-     * @param supplierName New name
-     * @param companyName  New company name
-     * @param phone        New phone number
+     * @param supplier The Supplier object containing updated data
      * @return String message indicating success or error
      */
-    public String updateSupplier(int supplierId, String supplierName, String companyName, String phone) {
+    public String updateSupplier(Supplier supplier) {
         // Validate inputs
-        if (supplierName == null || supplierName.trim().isEmpty()) {
+        if (supplier.getSupplierName() == null || supplier.getSupplierName().trim().isEmpty()) {
             return "Error: Supplier name cannot be empty!";
         }
-        if (companyName == null || companyName.trim().isEmpty()) {
+        if (supplier.getCompanyName() == null || supplier.getCompanyName().trim().isEmpty()) {
             return "Error: Company name cannot be empty!";
         }
 
@@ -149,10 +144,10 @@ public class SupplierController {
         try (Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            pstmt.setString(1, supplierName.trim());
-            pstmt.setString(2, companyName.trim());
-            pstmt.setString(3, phone != null ? phone.trim() : "");
-            pstmt.setInt(4, supplierId);
+            pstmt.setString(1, supplier.getSupplierName().trim());
+            pstmt.setString(2, supplier.getCompanyName().trim());
+            pstmt.setString(3, supplier.getPhone() != null ? supplier.getPhone().trim() : "");
+            pstmt.setInt(4, supplier.getSupplierId());
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
                 return "Success: Supplier updated successfully!";

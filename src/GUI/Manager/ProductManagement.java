@@ -31,7 +31,6 @@ public class ProductManagement extends javax.swing.JFrame {
                 loadProductData(); // Load all products into the table
         }
 
-        @SuppressWarnings("unchecked")
         // <editor-fold defaultstate="collapsed" desc="Generated
         // Code">//GEN-BEGIN:initComponents
         private void initComponents() {
@@ -544,17 +543,33 @@ public class ProductManagement extends javax.swing.JFrame {
          * Adds a new product based on the information in the input fields.
          */
         private void addProduct() {
+                // 1. Collect and validate Category
                 Category selectedCat = null;
                 if (cmb_Category.getSelectedIndex() >= 0) {
                         String name = cmb_Category.getSelectedItem().toString();
                         selectedCat = new Category(categoryMap.get(name), name);
+                } else {
+                        JOptionPane.showMessageDialog(this, "Please select a category!", "Error",
+                                        JOptionPane.ERROR_MESSAGE);
+                        return;
                 }
 
-                String result = controller.addProduct(
-                                txt_itemname.getText(),
-                                selectedCat,
-                                txt_itemprice.getText(),
-                                txt_BuyingPrice.getText());
+                // 2. Create and populate Model object
+                Product product = new Product();
+                product.setProductName(txt_itemname.getText());
+                product.setCategoryId(selectedCat.getCategoryId());
+
+                try {
+                        product.setBuyingPrice(Double.parseDouble(txt_BuyingPrice.getText()));
+                        product.setPrice(Double.parseDouble(txt_itemprice.getText()));
+                } catch (NumberFormatException e) {
+                        JOptionPane.showMessageDialog(this, "Invalid price format!", "Error",
+                                        JOptionPane.ERROR_MESSAGE);
+                        return;
+                }
+
+                // 3. Pass to Controller
+                String result = controller.addProduct(product);
 
                 if (result.startsWith("Success")) {
                         JOptionPane.showMessageDialog(this, result, "Success", JOptionPane.INFORMATION_MESSAGE);
@@ -580,18 +595,34 @@ public class ProductManagement extends javax.swing.JFrame {
                 if (confirm != JOptionPane.YES_OPTION)
                         return;
 
+                // 1. Collect and validate Category
                 Category selectedCat = null;
                 if (cmb_Category.getSelectedIndex() >= 0) {
                         String name = cmb_Category.getSelectedItem().toString();
                         selectedCat = new Category(categoryMap.get(name), name);
+                } else {
+                        JOptionPane.showMessageDialog(this, "Please select a category!", "Error",
+                                        JOptionPane.ERROR_MESSAGE);
+                        return;
                 }
 
-                String result = controller.updateProduct(
-                                selectedProductId,
-                                txt_itemname.getText(),
-                                selectedCat,
-                                txt_itemprice.getText(),
-                                txt_BuyingPrice.getText());
+                // 2. Create and populate Model object
+                Product product = new Product();
+                product.setProductId(selectedProductId);
+                product.setProductName(txt_itemname.getText());
+                product.setCategoryId(selectedCat.getCategoryId());
+
+                try {
+                        product.setBuyingPrice(Double.parseDouble(txt_BuyingPrice.getText()));
+                        product.setPrice(Double.parseDouble(txt_itemprice.getText()));
+                } catch (NumberFormatException e) {
+                        JOptionPane.showMessageDialog(this, "Invalid price format!", "Error",
+                                        JOptionPane.ERROR_MESSAGE);
+                        return;
+                }
+
+                // 3. Pass to Controller
+                String result = controller.updateProduct(product);
 
                 if (result.startsWith("Success")) {
                         JOptionPane.showMessageDialog(this, result, "Success", JOptionPane.INFORMATION_MESSAGE);

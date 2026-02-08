@@ -27,7 +27,6 @@ public class SupplierManagement extends javax.swing.JFrame {
                 loadSupplierData(); // Display current suppliers on startup
         }
 
-        @SuppressWarnings("unchecked")
         // <editor-fold defaultstate="collapsed" desc="Generated
         // Code">//GEN-BEGIN:initComponents
         private void initComponents() {
@@ -536,10 +535,14 @@ public class SupplierManagement extends javax.swing.JFrame {
          * Adds a new supplier.
          */
         private void addSupplier() {
-                String result = controller.addSupplier(
-                                txt_suppliername.getText(),
-                                txt_companyname.getText(),
-                                txt_phone.getText());
+                // 1. Create and populate Model object
+                Supplier supplier = new Supplier();
+                supplier.setSupplierName(txt_suppliername.getText());
+                supplier.setCompanyName(txt_companyname.getText());
+                supplier.setPhone(txt_phone.getText());
+
+                // 2. Pass to Controller
+                String result = controller.addSupplier(supplier);
 
                 if (result.startsWith("Success")) {
                         JOptionPane.showMessageDialog(this, result, "Success", JOptionPane.INFORMATION_MESSAGE);
@@ -565,11 +568,15 @@ public class SupplierManagement extends javax.swing.JFrame {
                 if (confirm != JOptionPane.YES_OPTION)
                         return;
 
-                String result = controller.updateSupplier(
-                                selectedSupplierId,
-                                txt_suppliername.getText(),
-                                txt_companyname.getText(),
-                                txt_phone.getText());
+                // 1. Create and populate Model object
+                Supplier supplier = new Supplier();
+                supplier.setSupplierId(selectedSupplierId);
+                supplier.setSupplierName(txt_suppliername.getText());
+                supplier.setCompanyName(txt_companyname.getText());
+                supplier.setPhone(txt_phone.getText());
+
+                // 2. Pass to Controller
+                String result = controller.updateSupplier(supplier);
 
                 if (result.startsWith("Success")) {
                         JOptionPane.showMessageDialog(this, result, "Success", JOptionPane.INFORMATION_MESSAGE);
