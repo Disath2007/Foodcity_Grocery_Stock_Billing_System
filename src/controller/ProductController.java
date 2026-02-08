@@ -30,15 +30,20 @@ public class ProductController {
      */
     public List<Product> getAllProducts() {
         List<Product> products = new ArrayList<>();
+        // SQL query to fetch product details and join with category to get the category
+        // name
         String sql = "SELECT p.product_id, p.product_name, p.category_id, c.category_name, p.price, p.buying_price " +
                 "FROM product p JOIN category c ON p.category_id = c.category_id " +
                 "ORDER BY p.product_name";
 
-        try (Connection conn = DatabaseConnection.getConnection();
-                PreparedStatement pstmt = conn.prepareStatement(sql);
-                ResultSet rs = pstmt.executeQuery()) {
+        // Try-with-resources: connects to database and executes the product fetch query
+        try (Connection conn = DatabaseConnection.getConnection(); // Get DB connection
+                PreparedStatement pstmt = conn.prepareStatement(sql); // Prepare the SQL
+                ResultSet rs = pstmt.executeQuery()) { // Execute and get results
 
+            // Loop through all records returned from the database join
             while (rs.next()) {
+                // Initialize the Product model using data from the current result row
                 Product product = new Product(
                         rs.getInt("product_id"),
                         rs.getString("product_name"),
@@ -46,9 +51,11 @@ public class ProductController {
                         rs.getString("category_name"),
                         rs.getDouble("price"),
                         rs.getDouble("buying_price"));
+                // Add the populated Product object to our result list
                 products.add(product);
             }
         } catch (SQLException e) {
+            // Log database-related errors
             System.err.println("Error getting all products: " + e.getMessage());
         }
         return products;
@@ -62,16 +69,20 @@ public class ProductController {
      */
     public List<Product> searchProducts(String searchTerm) {
         List<Product> products = new ArrayList<>();
+        // Search query using the LIKE operator for pattern matching on product names
         String sql = "SELECT p.product_id, p.product_name, p.category_id, c.category_name, p.price, p.buying_price " +
                 "FROM product p JOIN category c ON p.category_id = c.category_id " +
                 "WHERE p.product_name LIKE ? " +
                 "ORDER BY p.product_name";
 
-        try (Connection conn = DatabaseConnection.getConnection();
-                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseConnection.getConnection(); // Connect to database
+                PreparedStatement pstmt = conn.prepareStatement(sql)) { // Prepare SQL
 
+            // Set the search parameter with wildcards (%) for partial matches
             pstmt.setString(1, "%" + searchTerm + "%");
+
             try (ResultSet rs = pstmt.executeQuery()) {
+                // Process each matching product record
                 while (rs.next()) {
                     Product product = new Product(
                             rs.getInt("product_id"),
@@ -96,13 +107,15 @@ public class ProductController {
      */
     public List<Category> getAllCategories() {
         List<Category> categories = new ArrayList<>();
+        // Simple select query to populate category selection dropdowns
         String sql = "SELECT category_id, category_name FROM category ORDER BY category_name";
 
-        try (Connection conn = DatabaseConnection.getConnection();
-                PreparedStatement pstmt = conn.prepareStatement(sql);
-                ResultSet rs = pstmt.executeQuery()) {
+        try (Connection conn = DatabaseConnection.getConnection(); // Database connection
+                PreparedStatement pstmt = conn.prepareStatement(sql); // Prepare statement
+                ResultSet rs = pstmt.executeQuery()) { // Execute selection
 
             while (rs.next()) {
+                // Build a minimal Category model (ID and Name only)
                 Category category = new Category(
                         rs.getInt("category_id"),
                         rs.getString("category_name"));
@@ -121,37 +134,45 @@ public class ProductController {
      * @return String message indicating success or error
      */
     public String addProduct(Product product) {
-        // Validate inputs
+        // 1. Logic Validation: Check mandatory fields from the Product model
         if (product.getProductName() == null || product.getProductName().trim().isEmpty()) {
             return "Error: Product name cannot be empty!";
         }
         if (product.getCategoryId() <= 0) {
             return "Error: Please select a category!";
         }
+        // 2. Range Validation: Prices must be positive values
         if (product.getPrice() < 0 || product.getBuyingPrice() < 0) {
             return "Error: Prices cannot be negative!";
         }
 
-        // Check if product name already exists
+        // 3. Duplicate Check: Ensure no other product shares this name
         if (isProductNameExists(product.getProductName(), -1)) {
             return "Error: Product name already exists!";
         }
 
+        // 4. Persistence: Insert the new product into the database
         String sql = "INSERT INTO product (product_name, category_id, price, buying_price) VALUES (?, ?, ?, ?)";
-        try (Connection conn = DatabaseConnection.getConnection();
-                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseConnection.getConnection(); // Get DB access
+                PreparedStatement pstmt = conn.prepareStatement(sql)) { // Prepare insert statement
 
+            // Map product model fields to query parameters
             pstmt.setString(1, product.getProductName().trim());
             pstmt.setInt(2, product.getCategoryId());
             pstmt.setDouble(3, product.getPrice());
             pstmt.setDouble(4, product.getBuyingPrice());
+
+            // Execute the operation
             int rowsAffected = pstmt.executeUpdate();
+
+            // Provide feedback based on the result
             if (rowsAffected > 0) {
                 return "Success: Product added successfully!";
             } else {
                 return "Error: Failed to add product!";
             }
         } catch (SQLException e) {
+            // Error handling and reporting
             System.err.println("Error adding product: " + e.getMessage());
             return "Error: " + e.getMessage();
         }
@@ -164,7 +185,7 @@ public class ProductController {
      * @return String message indicating success or error
      */
     public String updateProduct(Product product) {
-        // Validate inputs
+        // Data Validation using model getters
         if (product.getProductName() == null || product.getProductName().trim().isEmpty()) {
             return "Error: Product name cannot be empty!";
         }
@@ -175,20 +196,24 @@ public class ProductController {
             return "Error: Prices cannot be negative!";
         }
 
-        // Check if product name already exists (excluding current product)
+        // Rule Check: Name conflict prevention (ignoring the current product ID)
         if (isProductNameExists(product.getProductName(), product.getProductId())) {
             return "Error: Product name already exists!";
         }
 
+        // SQL update query for refining existing records
         String sql = "UPDATE product SET product_name = ?, category_id = ?, price = ?, buying_price = ? WHERE product_id = ?";
-        try (Connection conn = DatabaseConnection.getConnection();
-                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseConnection.getConnection(); // Connect to DB
+                PreparedStatement pstmt = conn.prepareStatement(sql)) { // Prepare statement
 
+            // Bind values from the Product model
             pstmt.setString(1, product.getProductName().trim());
             pstmt.setInt(2, product.getCategoryId());
             pstmt.setDouble(3, product.getPrice());
             pstmt.setDouble(4, product.getBuyingPrice());
             pstmt.setInt(5, product.getProductId());
+
+            // Apply updates
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
                 return "Success: Product updated successfully!";
@@ -208,11 +233,15 @@ public class ProductController {
      * @return String message indicating success or error
      */
     public String deleteProduct(int productId) {
+        // Standard SQL query for record removal
         String sql = "DELETE FROM product WHERE product_id = ?";
-        try (Connection conn = DatabaseConnection.getConnection();
-                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseConnection.getConnection(); // Connect to DB
+                PreparedStatement pstmt = conn.prepareStatement(sql)) { // Prepare SQL
 
+            // Set the ID of the product to remove
             pstmt.setInt(1, productId);
+
+            // Execute the deletion
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
                 return "Success: Product deleted successfully!";
@@ -234,6 +263,8 @@ public class ProductController {
      * @return true if the name exists, false otherwise
      */
     public boolean isProductNameExists(String productName, int excludeId) {
+        // Query to check for name duplicates while allowing the current product to keep
+        // its name
         String sql = "SELECT COUNT(*) FROM product WHERE product_name = ? AND product_id != ?";
         try (Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -241,6 +272,7 @@ public class ProductController {
             pstmt.setString(1, productName.trim());
             pstmt.setInt(2, excludeId);
             try (ResultSet rs = pstmt.executeQuery()) {
+                // If count > 0, the name is already taken
                 if (rs.next()) {
                     return rs.getInt(1) > 0;
                 }

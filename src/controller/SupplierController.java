@@ -29,26 +29,33 @@ public class SupplierController {
      */
     public List<Supplier> getAllSuppliers() {
         List<Supplier> suppliers = new ArrayList<>();
+        // SQL query to fetch supplier info and count their supplied products via LEFT
+        // JOIN
         String sql = "SELECT s.supplier_id, s.supplier_name, s.company_name, s.phone, " +
                 "COUNT(sp.product_id) as product_count " +
                 "FROM supplier s LEFT JOIN supplier_product sp ON s.supplier_id = sp.supplier_id " +
                 "GROUP BY s.supplier_id, s.supplier_name, s.company_name, s.phone " +
                 "ORDER BY s.supplier_id";
 
-        try (Connection conn = DatabaseConnection.getConnection();
-                PreparedStatement pstmt = conn.prepareStatement(sql);
-                ResultSet rs = pstmt.executeQuery()) {
+        // Try-with-resources: connects to DB and executes the selection
+        try (Connection conn = DatabaseConnection.getConnection(); // Get database connection
+                PreparedStatement pstmt = conn.prepareStatement(sql); // Prepare SQL statement
+                ResultSet rs = pstmt.executeQuery()) { // Execute and get results
 
+            // Iterate over all supplier records found
             while (rs.next()) {
+                // Initialize Supplier model with retrieved data
                 Supplier supplier = new Supplier(
                         rs.getInt("supplier_id"),
                         rs.getString("supplier_name"),
                         rs.getString("company_name"),
                         rs.getString("phone"),
                         rs.getInt("product_count"));
+                // Add supplier to the list for return
                 suppliers.add(supplier);
             }
         } catch (SQLException e) {
+            // Log database errors
             System.err.println("Error getting all suppliers: " + e.getMessage());
         }
         return suppliers;
@@ -62,6 +69,7 @@ public class SupplierController {
      */
     public List<Supplier> searchSuppliers(String searchTerm) {
         List<Supplier> suppliers = new ArrayList<>();
+        // Search query using LIKE wildcards to find matches in name or company
         String sql = "SELECT s.supplier_id, s.supplier_name, s.company_name, s.phone, " +
                 "COUNT(sp.product_id) as product_count " +
                 "FROM supplier s LEFT JOIN supplier_product sp ON s.supplier_id = sp.supplier_id " +
@@ -69,12 +77,15 @@ public class SupplierController {
                 "GROUP BY s.supplier_id, s.supplier_name, s.company_name, s.phone " +
                 "ORDER BY s.supplier_name";
 
-        try (Connection conn = DatabaseConnection.getConnection();
-                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseConnection.getConnection(); // Connect to DB
+                PreparedStatement pstmt = conn.prepareStatement(sql)) { // Prepare SQL
 
+            // Set search terms with '%' wildcards
             pstmt.setString(1, "%" + searchTerm + "%");
             pstmt.setString(2, "%" + searchTerm + "%");
+
             try (ResultSet rs = pstmt.executeQuery()) {
+                // Capture all matching records
                 while (rs.next()) {
                     Supplier supplier = new Supplier(
                             rs.getInt("supplier_id"),
@@ -98,7 +109,7 @@ public class SupplierController {
      * @return String message indicating success or error
      */
     public String addSupplier(Supplier supplier) {
-        // Validate inputs
+        // 1. Validation: Ensure required supplier info is present using model getters
         if (supplier.getSupplierName() == null || supplier.getSupplierName().trim().isEmpty()) {
             return "Error: Supplier name cannot be empty!";
         }
@@ -106,20 +117,27 @@ public class SupplierController {
             return "Error: Company name cannot be empty!";
         }
 
+        // 2. Persistence: Insert new supplier record
         String sql = "INSERT INTO supplier (supplier_name, company_name, phone) VALUES (?, ?, ?)";
-        try (Connection conn = DatabaseConnection.getConnection();
-                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseConnection.getConnection(); // Get DB access
+                PreparedStatement pstmt = conn.prepareStatement(sql)) { // Create insert statement
 
+            // Bind values from the Supplier model
             pstmt.setString(1, supplier.getSupplierName().trim());
             pstmt.setString(2, supplier.getCompanyName().trim());
             pstmt.setString(3, supplier.getPhone() != null ? supplier.getPhone().trim() : "");
+
+            // Execute the operation
             int rowsAffected = pstmt.executeUpdate();
+
+            // Check success
             if (rowsAffected > 0) {
                 return "Success: Supplier added successfully!";
             } else {
                 return "Error: Failed to add supplier!";
             }
         } catch (SQLException e) {
+            // Error handling
             System.err.println("Error adding supplier: " + e.getMessage());
             return "Error: " + e.getMessage();
         }
@@ -132,7 +150,7 @@ public class SupplierController {
      * @return String message indicating success or error
      */
     public String updateSupplier(Supplier supplier) {
-        // Validate inputs
+        // Validation using model getters
         if (supplier.getSupplierName() == null || supplier.getSupplierName().trim().isEmpty()) {
             return "Error: Supplier name cannot be empty!";
         }
@@ -140,14 +158,18 @@ public class SupplierController {
             return "Error: Company name cannot be empty!";
         }
 
+        // SQL update query
         String sql = "UPDATE supplier SET supplier_name = ?, company_name = ?, phone = ? WHERE supplier_id = ?";
-        try (Connection conn = DatabaseConnection.getConnection();
-                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseConnection.getConnection(); // Connect to DB
+                PreparedStatement pstmt = conn.prepareStatement(sql)) { // Prepare update
 
+            // Map updated model data to SQL parameters
             pstmt.setString(1, supplier.getSupplierName().trim());
             pstmt.setString(2, supplier.getCompanyName().trim());
             pstmt.setString(3, supplier.getPhone() != null ? supplier.getPhone().trim() : "");
             pstmt.setInt(4, supplier.getSupplierId());
+
+            // Apply update
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
                 return "Success: Supplier updated successfully!";
@@ -167,7 +189,7 @@ public class SupplierController {
      * @return String message indicating success or error
      */
     public String deleteSupplier(int supplierId) {
-        // First delete supplier-product relationships
+        // Step 1: Clean up related data first (suppliers_product join table)
         String deleteSPSql = "DELETE FROM supplier_product WHERE supplier_id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(deleteSPSql)) {
@@ -175,15 +197,18 @@ public class SupplierController {
             pstmt.executeUpdate();
         } catch (SQLException e) {
             System.err.println("Error deleting supplier products: " + e.getMessage());
-            // Continue to try deleting the supplier anyway
+            // Attempt to continue deleting the main supplier record
         }
 
-        // Then delete the supplier
+        // Step 2: Delete the main supplier record
         String sql = "DELETE FROM supplier WHERE supplier_id = ?";
-        try (Connection conn = DatabaseConnection.getConnection();
-                PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseConnection.getConnection(); // Connect
+                PreparedStatement pstmt = conn.prepareStatement(sql)) { // Prepare delete
 
+            // Set target ID
             pstmt.setInt(1, supplierId);
+
+            // Execute deletion
             int rowsAffected = pstmt.executeUpdate();
             if (rowsAffected > 0) {
                 return "Success: Supplier deleted successfully!";
