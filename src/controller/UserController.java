@@ -93,7 +93,6 @@ public class UserController {
         String sql = "SELECT user_id, username, password, full_name, phone, role, created_at " +
                 "FROM users ORDER BY user_id";
 
-
         try (Connection conn = DatabaseConnection.getConnection(); // Get connection
                 PreparedStatement pstmt = conn.prepareStatement(sql); // Prepare statement
                 ResultSet rs = pstmt.executeQuery()) { // Execute query
@@ -215,12 +214,19 @@ public class UserController {
             return "Error: Please select a role!";
         }
 
-        // 2. Business Logic: Generate username from full name (lowercase, no spaces)
-        String username = user.getFullName().trim().toLowerCase().replace(" ", "");
+        // 2. Business Logic: Use provided username or generate from full name
+        String username = user.getUsername();
+        if (username == null || username.trim().isEmpty()) {
+            username = user.getFullName().trim().toLowerCase().replace(" ", "");
+        } else {
+            username = username.trim();
+        }
 
-        // 3. Duplicate Handling: Check if username already exists and append suffix if
-        // needed
+        // 3. Duplicate Handling: Check if username already exists
         if (isUsernameExists(username, -1)) {
+            if (user.getUsername() != null && !user.getUsername().trim().isEmpty()) {
+                return "Error: Username '" + username + "' already exists!";
+            }
             int suffix = 1;
             while (isUsernameExists(username + suffix, -1)) {
                 suffix++;
@@ -228,7 +234,7 @@ public class UserController {
             username = username + suffix;
         }
 
-        // Set the final generated username back into the User model
+        // Set the final username back into the User model
         user.setUsername(username);
 
         // SQL query to insert a new user record
@@ -243,8 +249,6 @@ public class UserController {
             pstmt.setString(4, user.getPhone() != null ? user.getPhone().trim() : "");
             pstmt.setString(5, user.getRole().trim());
 
-
-            
             // Execute the update query
             int rowsAffected = pstmt.executeUpdate();
 
@@ -279,9 +283,9 @@ public class UserController {
         // Determine if password needs updating (conditional SQL)
         String sql;
         if (user.getPassword() != null && !user.getPassword().isEmpty()) {
-            sql = "UPDATE users SET password = ?, full_name = ?, phone = ?, role = ? WHERE user_id = ?";
+            sql = "UPDATE users SET username = ?, password = ?, full_name = ?, phone = ?, role = ? WHERE user_id = ?";
         } else {
-            sql = "UPDATE users SET full_name = ?, phone = ?, role = ? WHERE user_id = ?";
+            sql = "UPDATE users SET username = ?, full_name = ?, phone = ?, role = ? WHERE user_id = ?";
         }
 
         try (Connection conn = DatabaseConnection.getConnection(); // Connect to DB
@@ -289,16 +293,18 @@ public class UserController {
 
             // Dynamically set parameters based on whether password is being changed
             if (user.getPassword() != null && !user.getPassword().isEmpty()) {
-                pstmt.setString(1, user.getPassword());
+                pstmt.setString(1, user.getUsername().trim());
+                pstmt.setString(2, user.getPassword());
+                pstmt.setString(3, user.getFullName().trim());
+                pstmt.setString(4, user.getPhone() != null ? user.getPhone().trim() : "");
+                pstmt.setString(5, user.getRole().trim());
+                pstmt.setInt(6, user.getUserId());
+            } else {
+                pstmt.setString(1, user.getUsername().trim());
                 pstmt.setString(2, user.getFullName().trim());
                 pstmt.setString(3, user.getPhone() != null ? user.getPhone().trim() : "");
                 pstmt.setString(4, user.getRole().trim());
                 pstmt.setInt(5, user.getUserId());
-            } else {
-                pstmt.setString(1, user.getFullName().trim());
-                pstmt.setString(2, user.getPhone() != null ? user.getPhone().trim() : "");
-                pstmt.setString(3, user.getRole().trim());
-                pstmt.setInt(4, user.getUserId());
             }
 
             // Perform the update
