@@ -28,7 +28,7 @@ public class StockManagement extends javax.swing.JFrame {
                 loadStockData(); // Load all items into the main table
                 loadLowStockAlerts(); // Load current low stock items into the alert panel
                 startAutoRefresh(); // Begin auto-refresh cycle for alerts
-                lbl_name.setText("");
+               lbl_name.setText("");
         }
 
         // <editor-fold defaultstate="collapsed" desc="Generated

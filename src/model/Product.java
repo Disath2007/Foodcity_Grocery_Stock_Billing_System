@@ -12,7 +12,7 @@ public class Product {
     private String productName;
     private int categoryId;
     private String categoryName;
-    private double sellingPrice; // was price
+    private double sellingPrice; 
     private double buyingPrice;
 
     /**

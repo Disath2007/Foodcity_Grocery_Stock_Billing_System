@@ -91,9 +91,9 @@ public class UserController {
         List<User> users = new ArrayList<>();
         // SQL query to fetch all user records ordered by full name
         String sql = "SELECT user_id, username, password, full_name, phone, role, created_at " +
-                "FROM users ORDER BY full_name";
+                "FROM users ORDER BY user_id";
 
-        // Try-with-resources to ensure connection and statement are closed
+
         try (Connection conn = DatabaseConnection.getConnection(); // Get connection
                 PreparedStatement pstmt = conn.prepareStatement(sql); // Prepare statement
                 ResultSet rs = pstmt.executeQuery()) { // Execute query
@@ -167,7 +167,7 @@ public class UserController {
         List<User> users = new ArrayList<>();
         // SQL query using LIKE operators for flexible searching by name or username
         String sql = "SELECT user_id, username, password, full_name, phone, role, created_at " +
-                "FROM users WHERE full_name LIKE ? OR username LIKE ? ORDER BY full_name";
+                "FROM users WHERE full_name LIKE ? OR username LIKE ? ORDER BY user_id";
 
         try (Connection conn = DatabaseConnection.getConnection(); // Connect to DB
                 PreparedStatement pstmt = conn.prepareStatement(sql)) { // Prepare statement
@@ -243,6 +243,8 @@ public class UserController {
             pstmt.setString(4, user.getPhone() != null ? user.getPhone().trim() : "");
             pstmt.setString(5, user.getRole().trim());
 
+
+            
             // Execute the update query
             int rowsAffected = pstmt.executeUpdate();
 

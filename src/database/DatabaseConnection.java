@@ -18,27 +18,26 @@ public class DatabaseConnection {
     public static Connection getConnection() {
 
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-
+          
             Connection conn = DriverManager.getConnection(
                     "jdbc:mysql://localhost:3306/foodcity_db",
                     "root",
                     "Disath06@#");
 
-            System.out.println("Success! DB connected to Docker Cnotaienr.");
+            System.out.println("Success! DB connected");
             return conn;
 
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "SQL Error: " + e.getMessage());
             return null;
 
-        } catch (ClassNotFoundException e) {
-            JOptionPane.showMessageDialog(null, "MySQL Driver Not Found!");
-            return null;
-        }
+        } 
     }
 
     public static void main(String[] args) {
         getConnection();
     }
 }
+
+
+
