@@ -57,6 +57,7 @@ public class UserManagement extends javax.swing.JFrame {
      */
 
     // <editor-fold defaultstate="collapsed" desc="Generated
+    // <editor-fold defaultstate="collapsed" desc="Generated
     // Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -306,7 +307,7 @@ public class UserManagement extends javax.swing.JFrame {
 
         lblsearch.setFont(new java.awt.Font("Unispace", 0, 18)); // NOI18N
         lblsearch.setForeground(new java.awt.Color(5, 63, 22));
-        lblsearch.setText("Search By Name/ID :");
+        lblsearch.setText("Search By Name :");
 
         txtsearch.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
@@ -397,7 +398,7 @@ public class UserManagement extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void usertableMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_usertableMouseClicked
+    private void usertableMouseClicked(java.awt.event.MouseEvent evt) {
         // 1. Get the selected row index
         int selectedRow = usertable.getSelectedRow();
         if (selectedRow < 0)
@@ -424,7 +425,7 @@ public class UserManagement extends javax.swing.JFrame {
         if (user != null) {
             Password.setText(user.getPassword());
         }
-    }// GEN-LAST:event_usertableMouseClicked
+    }
 
     private void txtsearchKeyReleased(java.awt.event.KeyEvent evt) {
         searchUsers();

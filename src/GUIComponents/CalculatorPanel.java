@@ -73,14 +73,16 @@ public class CalculatorPanel extends JPanel {
         InputMap inputMap = getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
         ActionMap actionMap = getActionMap();
 
-        // F2 key to ACTIVATE calculator mode
-        inputMap.put(KeyStroke.getKeyStroke("F2"), "activateCalculator");
+        // F12 key to ACTIVATE/TOGGLE calculator mode
+        inputMap.put(KeyStroke.getKeyStroke("F12"), "activateCalculator");
         actionMap.put("activateCalculator", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                isCalculatorActive = true;
+                isCalculatorActive = !isCalculatorActive; // Toggle for easier access
                 updateBorder();
-                requestFocusInWindow();
+                if (isCalculatorActive) {
+                    requestFocusInWindow();
+                }
             }
         });
 

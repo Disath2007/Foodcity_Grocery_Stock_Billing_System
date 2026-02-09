@@ -53,9 +53,9 @@ public class LoginFrame extends javax.swing.JFrame {
         lbl_username = new javax.swing.JLabel();
         lbl_username1 = new javax.swing.JLabel();
         txtusername = new javax.swing.JTextField();
-        txtpassword = new javax.swing.JTextField();
         jSeparator1 = new javax.swing.JSeparator();
         btnlogin = new javax.swing.JButton();
+        lgn_pass = new javax.swing.JPasswordField();
         Left = new javax.swing.JPanel();
         lblphoto = new javax.swing.JLabel();
 
@@ -90,22 +90,22 @@ public class LoginFrame extends javax.swing.JFrame {
         RightLayout.setHorizontalGroup(
             RightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, RightLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(33, Short.MAX_VALUE)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 401, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(RightLayout.createSequentialGroup()
-                .addGap(41, 41, 41)
-                .addGroup(RightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtpassword, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbl_username1)
-                    .addComponent(lbl_username)
-                    .addComponent(lbl_login)
-                    .addComponent(txtusername, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(51, Short.MAX_VALUE))
+                .addContainerGap(33, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, RightLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnlogin, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(51, 51, 51))
+            .addGroup(RightLayout.createSequentialGroup()
+                .addGap(41, 41, 41)
+                .addGroup(RightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(lgn_pass)
+                    .addComponent(lbl_username1)
+                    .addComponent(lbl_username)
+                    .addComponent(lbl_login)
+                    .addComponent(txtusername, javax.swing.GroupLayout.DEFAULT_SIZE, 375, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         RightLayout.setVerticalGroup(
             RightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -121,7 +121,7 @@ public class LoginFrame extends javax.swing.JFrame {
                 .addGap(52, 52, 52)
                 .addComponent(lbl_username1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtpassword, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lgn_pass, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnlogin, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(40, 40, 40))
@@ -161,33 +161,36 @@ public class LoginFrame extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-        private void btnloginActionPerformed(java.awt.event.ActionEvent evt) {
-                String username = txtusername.getText();
-                String password = txtpassword.getText();
+private void btnloginActionPerformed(java.awt.event.ActionEvent evt) {
+    String username = txtusername.getText();
+    // Convert char[] to String
+    String password = new String(lgn_pass.getPassword()); 
 
+    // Basic validation before calling the controller
+    if (username.trim().isEmpty() || password.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Please enter both username and password", "Input Error", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
 
-                User user = controller.login(username, password);
+    User user = controller.login(username, password);
 
-                if (user != null) {
-                        JOptionPane.showMessageDialog(this, "Login Successful! Welcome, " + user.getFullName());
+    if (user != null) {
+        JOptionPane.showMessageDialog(this, "Login Successful! Welcome, " + user.getFullName());
 
-                        String role = user.getRole();
-                        if ("Admin".equalsIgnoreCase(role)) {
-                                new AdminDashboard().setVisible(true);
-                        } else if ("Manager".equalsIgnoreCase(role)) {
-                                new ManagerDashboard().setVisible(true);
-                        } else {
-                                new CashierDashboard(user).setVisible(true);
-                        }
-                        this.dispose();
-                } else {
-                        if (username.isEmpty() || password.isEmpty()) {
-                                JOptionPane.showMessageDialog(this, "Please enter username and password");
-                        } else {
-                                JOptionPane.showMessageDialog(this, "Invalid Username or Password");
-                        }
-                }
+        String role = user.getRole();
+        if ("Admin".equalsIgnoreCase(role)) {
+            new AdminDashboard().setVisible(true);
+        } else if ("Manager".equalsIgnoreCase(role)) {
+            new ManagerDashboard().setVisible(true);
+        } else {
+            // Passing user object is good practice for session handling
+            new CashierDashboard(user).setVisible(true);
         }
+        this.dispose();
+    } else {
+        JOptionPane.showMessageDialog(this, "Invalid Username or Password", "Login Failed", JOptionPane.ERROR_MESSAGE);
+    }
+}
 
         /**
          * @param args the command line arguments
@@ -229,7 +232,7 @@ public class LoginFrame extends javax.swing.JFrame {
     private javax.swing.JLabel lbl_username;
     private javax.swing.JLabel lbl_username1;
     private javax.swing.JLabel lblphoto;
-    private javax.swing.JTextField txtpassword;
+    private javax.swing.JPasswordField lgn_pass;
     private javax.swing.JTextField txtusername;
     // End of variables declaration//GEN-END:variables
 }

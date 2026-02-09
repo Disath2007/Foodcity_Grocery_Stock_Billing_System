@@ -1046,7 +1046,7 @@ public class CashierDashboard extends javax.swing.JFrame {
 
                 Transaction_Detail_lbl1.setFont(new java.awt.Font("Unispace", 0, 18)); // NOI18N
                 Transaction_Detail_lbl1.setForeground(new java.awt.Color(255, 255, 255));
-                Transaction_Detail_lbl1.setText("Calculator");
+                Transaction_Detail_lbl1.setText("Calculator (F12)");
 
                 javax.swing.GroupLayout top_panel_TD1Layout = new javax.swing.GroupLayout(top_panel_TD1);
                 top_panel_TD1.setLayout(top_panel_TD1Layout);
@@ -1370,7 +1370,7 @@ public class CashierDashboard extends javax.swing.JFrame {
                 setLocationRelativeTo(null);
         }// </editor-fold>//GEN-END:initComponents
 
-        private void btn_searchKeyReleased(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_btn_searchKeyReleased
+        private void btn_searchKeyReleased(java.awt.event.KeyEvent evt) {
                 String query = btn_search.getText().trim();
                 int keyCode = evt.getKeyCode();
 
@@ -1436,7 +1436,7 @@ public class CashierDashboard extends javax.swing.JFrame {
                         searchSuggestions.show(btn_search, 0, btn_search.getHeight());
                         btn_search.requestFocus(); // Keep focus for typing
                 }
-        }// GEN-LAST:event_btn_searchKeyReleased
+        }
 
         private void addItemToCart(Stock item) {
                 int qtyRequested = (Integer) qty.getValue();
@@ -1557,24 +1557,24 @@ public class CashierDashboard extends javax.swing.JFrame {
                 ((DefaultTableModel) Cashier_Table.getModel()).setRowCount(0);
         }
 
-        private void Logout_btnActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_Logout_btnActionPerformed
+        private void Logout_btnActionPerformed(java.awt.event.ActionEvent evt) {
                 int result = JOptionPane.showConfirmDialog(this, "Are you sure you want to logout?", "Logout",
                                 JOptionPane.YES_NO_OPTION);
                 if (result == JOptionPane.YES_OPTION) {
                         this.dispose();
                         new GUI.LoginFrame().setVisible(true);
                 }
-        }// GEN-LAST:event_Logout_btnActionPerformed
+        }
 
-        private void txt_CashActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_txt_CashActionPerformed
+        private void txt_CashActionPerformed(java.awt.event.ActionEvent evt) {
                 Pay_PrintActionPerformed(evt);
-        }// GEN-LAST:event_txt_CashActionPerformed
+        }
 
-        private void Cashier_TableMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_Cashier_TableMouseClicked
+        private void Cashier_TableMouseClicked(java.awt.event.MouseEvent evt) {
                 Remove.setEnabled(true);
-        }// GEN-LAST:event_Cashier_TableMouseClicked
+        }
 
-        private void RemoveActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_RemoveActionPerformed
+        private void RemoveActionPerformed(java.awt.event.ActionEvent evt) {
                 int selectedRow = Cashier_Table.getSelectedRow();
                 if (selectedRow != -1) {
 
@@ -1584,13 +1584,13 @@ public class CashierDashboard extends javax.swing.JFrame {
                         JOptionPane.showMessageDialog(this, "Please select an item to remove", "Selection Error",
                                         JOptionPane.WARNING_MESSAGE);
                 }
-        }// GEN-LAST:event_RemoveActionPerformed
+        }
 
-        private void btn_Void_ItemActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btn_Void_ItemActionPerformed
+        private void btn_Void_ItemActionPerformed(java.awt.event.ActionEvent evt) {
                 RemoveActionPerformed(evt);
-        }// GEN-LAST:event_btn_Void_ItemActionPerformed
+        }
 
-        private void btn_Price_CheckActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btn_Price_CheckActionPerformed
+        private void btn_Price_CheckActionPerformed(java.awt.event.ActionEvent evt) {
                 String query = JOptionPane.showInputDialog(this, "Enter product name for Price Check:");
                 if (query != null && !query.trim().isEmpty()) {
                         List<Stock> results = stockController.searchStock(query.trim());
@@ -1606,13 +1606,13 @@ public class CashierDashboard extends javax.swing.JFrame {
                                                 JOptionPane.ERROR_MESSAGE);
                         }
                 }
-        }// GEN-LAST:event_btn_Price_CheckActionPerformed
+        }
 
-        private void btn_Open_DrawerActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btn_Open_DrawerActionPerformed
+        private void btn_Open_DrawerActionPerformed(java.awt.event.ActionEvent evt) {
                 JOptionPane.showMessageDialog(this, "Cash Drawer Opened", "Drawer", JOptionPane.INFORMATION_MESSAGE);
-        }// GEN-LAST:event_btn_Open_DrawerActionPerformed
+        }
 
-        private void btn_Hold_TrassactionActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btn_Hold_TrassactionActionPerformed
+        private void btn_Hold_TrassactionActionPerformed(java.awt.event.ActionEvent evt) {
                 DefaultTableModel model = (DefaultTableModel) Cashier_Table.getModel();
                 if (model.getRowCount() == 0) {
                         JOptionPane.showMessageDialog(this, "Nothing to hold!", "Warning", JOptionPane.WARNING_MESSAGE);
@@ -1631,9 +1631,9 @@ public class CashierDashboard extends javax.swing.JFrame {
                 resetSummary();
                 JOptionPane.showMessageDialog(this, "Current transaction held.", "Transaction Held",
                                 JOptionPane.INFORMATION_MESSAGE);
-        }// GEN-LAST:event_btn_Hold_TrassactionActionPerformed
+        }
 
-        private void btn_Recall_OrderActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_btn_Recall_OrderActionPerformed
+        private void btn_Recall_OrderActionPerformed(java.awt.event.ActionEvent evt) {
                 if (heldTransaction == null || heldTransaction.isEmpty()) {
                         JOptionPane.showMessageDialog(this, "No held transaction found!", "Note",
                                         JOptionPane.INFORMATION_MESSAGE);
@@ -1656,9 +1656,9 @@ public class CashierDashboard extends javax.swing.JFrame {
                 calculateTotals();
                 JOptionPane.showMessageDialog(this, "Held transaction recalled.", "Success",
                                 JOptionPane.INFORMATION_MESSAGE);
-        }// GEN-LAST:event_btn_Recall_OrderActionPerformed
+        }
 
-        private void Pay_PrintActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_Pay_PrintActionPerformed
+        private void Pay_PrintActionPerformed(java.awt.event.ActionEvent evt) {
                 DefaultTableModel model = (DefaultTableModel) Cashier_Table.getModel();
                 if (model.getRowCount() == 0) {
                         JOptionPane.showMessageDialog(this, "Empty cart!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -1723,16 +1723,16 @@ public class CashierDashboard extends javax.swing.JFrame {
                                                 "Database Error", JOptionPane.ERROR_MESSAGE);
                         }
                 }
-        }// GEN-LAST:event_Pay_PrintActionPerformed
+        }
 
-        private void CancelActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_CancelActionPerformed
+        private void CancelActionPerformed(java.awt.event.ActionEvent evt) {
                 int result = JOptionPane.showConfirmDialog(this,
                                 "Are you sure you want to cancel the current transaction?", "Cancel Transaction",
                                 JOptionPane.YES_NO_OPTION);
                 if (result == JOptionPane.YES_OPTION) {
                         resetSummary();
                 }
-        }// GEN-LAST:event_CancelActionPerformed
+        }
 
         private void showReceiptDialog(DefaultTableModel model, double subtotal, double discount, double grandTotal,
                         double cash, double change) {

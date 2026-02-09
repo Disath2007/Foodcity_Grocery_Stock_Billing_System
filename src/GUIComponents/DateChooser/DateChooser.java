@@ -357,7 +357,7 @@ public final class DateChooser extends javax.swing.JPanel {
                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
     }// </editor-fold>//GEN-END:initComponents
 
-    private void cmdPreviousActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_cmdPreviousActionPerformed
+    private void cmdPreviousActionPerformed(java.awt.event.ActionEvent evt) {
         if (STATUS == 1) { // Date
             if (MONTH == 1) {
                 MONTH = 12;
@@ -377,9 +377,9 @@ public final class DateChooser extends javax.swing.JPanel {
                 cmdYear.setText(YEAR + "");
             }
         }
-    }// GEN-LAST:event_cmdPreviousActionPerformed
+    }
 
-    private void cmdForwardActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_cmdForwardActionPerformed
+    private void cmdForwardActionPerformed(java.awt.event.ActionEvent evt) {
         if (STATUS == 1) { // Date
             if (MONTH == 12) {
                 MONTH = 1;
@@ -397,9 +397,9 @@ public final class DateChooser extends javax.swing.JPanel {
             slide.slideToLeft(months);
             cmdYear.setText(YEAR + "");
         }
-    }// GEN-LAST:event_cmdForwardActionPerformed
+    }
 
-    private void cmdMonthActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_cmdMonthActionPerformed
+    private void cmdMonthActionPerformed(java.awt.event.ActionEvent evt) {
         if (STATUS != 2) {
             STATUS = 2;
             Months months = new Months();
@@ -413,9 +413,9 @@ public final class DateChooser extends javax.swing.JPanel {
             slide.slideToDown(dates);
             STATUS = 1;
         }
-    }// GEN-LAST:event_cmdMonthActionPerformed
+    }
 
-    private void cmdYearActionPerformed(java.awt.event.ActionEvent evt) {// GEN-FIRST:event_cmdYearActionPerformed
+    private void cmdYearActionPerformed(java.awt.event.ActionEvent evt) {
         if (STATUS != 3) {
             STATUS = 3;
             Years years = new Years();
@@ -430,9 +430,9 @@ public final class DateChooser extends javax.swing.JPanel {
             slide.slideToDown(dates);
             STATUS = 1;
         }
-    }// GEN-LAST:event_cmdYearActionPerformed
+    }
 
-    private void cmdPreviousKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_cmdPreviousKeyPressed
+    private void cmdPreviousKeyPressed(java.awt.event.KeyEvent evt) {
         if (evt.getKeyCode() == KeyEvent.VK_UP) {
             Component com = slide.getComponent(0);
             if (com instanceof Dates) {
@@ -458,7 +458,7 @@ public final class DateChooser extends javax.swing.JPanel {
                 d.next();
             }
         }
-    }// GEN-LAST:event_cmdPreviousKeyPressed
+    }
 
     public String getDateFormat() {
         return dateFormat;
